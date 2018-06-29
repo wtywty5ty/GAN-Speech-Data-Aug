@@ -214,7 +214,6 @@ class CDCGAN_Classifier(object):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train DCGAN model')
     parser.add_argument('--n_epochs', type=int, default=20, help='number of epochs of training')
-    parser.add_argument('--cuda', action='store_true', help='enables cuda')
     parser.add_argument('--gpu_ids', default=[0, 1, 2, 3], help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
     parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
