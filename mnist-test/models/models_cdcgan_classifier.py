@@ -7,9 +7,13 @@ class _netG(nn.Module):
         super(_netG, self).__init__()
         ngf = 64
         self.ngf = ngf
-        self.ln = nn.Sequential(nn.Linear(nz+nclass, ngf*8*4*4),
+        self.ln = nn.Sequential(nn.Linear(nz+nclass, 1024),
+                                nn.BatchNorm1d(1024),
+                                nn.ReLU(True),
+                                nn.Linear(1024, ngf*8*4*4),
                                 nn.BatchNorm1d(ngf*8*4*4),
-                                nn.ReLU(True),)
+                                nn.ReLU(True),
+                                )
 
         self.main = nn.Sequential(
             # state size. (ngf*8) x 4 x 4
@@ -59,7 +63,10 @@ class _netD(nn.Module):
             nn.LeakyReLU(0.2, inplace=True),
         )
 
-        self.ln = nn.Sequential(nn.Linear(ndf*8*4*4, 1),
+        self.ln = nn.Sequential(nn.Linear(ndf*8*4*4, 1024),
+                                nn.BatchNorm1d(1024),
+                                nn.LeakyReLU(0.2, inplace=True),
+                                nn.Linear(1024, 1),
                                 nn.Sigmoid())
 
     def forward(self, input):
@@ -91,7 +98,10 @@ class _netC(nn.Module):
             nn.LeakyReLU(0.2, inplace=True),
         )
 
-        self.ln = nn.Sequential(nn.Linear(ncf*8*4*4, 10))
+        self.ln = nn.Sequential(nn.Linear(ncf*8*4*4, 1024),
+                                nn.BatchNorm1d(1024),
+                                nn.LeakyReLU(0.2, inplace=True),
+                                nn.Linear(1024, 10),)
 
     def forward(self, input):
         out = self.main(input)
