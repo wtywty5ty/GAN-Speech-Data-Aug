@@ -213,7 +213,7 @@ if __name__ == '__main__':
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[32, 32], help='size of feature map')
-    parser.add_argument('--outf', default='outf/sn_cgan_classifier_scheduler', help="path to output files)")
+    parser.add_argument('--outf', default='outf/sn_cgan_classifier_scheduler_critic2', help="path to output files)")
     opt = parser.parse_args()
     print(opt)
 

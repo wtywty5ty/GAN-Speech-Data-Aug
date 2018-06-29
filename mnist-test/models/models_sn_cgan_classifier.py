@@ -86,18 +86,18 @@ class _netC(nn.Module):
         ncf = 64
         self.main = nn.Sequential(
             # state size. 1 x 32 x 32
-            nn.Conv2d(1, ncf, 3, 1, 1, bias=True),
+            nn.Conv2d(1, ncf, 4, 2, 1, bias=True),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 32 x 32
+            # state size. (ndf) x 16 x 16
             nn.Conv2d(ncf , ncf * 2, 4, 2, 1, bias=True),
             nn.BatchNorm2d(ncf*2),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 16 x 16
+            # state size. (ndf*2) x 8 x 8
             nn.Conv2d(ncf * 2, ncf * 4, 4, 2, 1, bias=True),
             nn.BatchNorm2d(ncf*4),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 8 x 8
-            nn.Conv2d(ncf * 4, ncf * 8, 4, 2, 1, bias=True),
+            # state size. (ndf*4) x 4 x 4
+            nn.Conv2d(ncf * 4, ncf * 8, 3, 1, 1, bias=True),
             nn.BatchNorm2d(ncf * 8),
             nn.LeakyReLU(0.2, inplace=True),
         )
@@ -105,7 +105,7 @@ class _netC(nn.Module):
         self.ln = nn.Sequential(nn.Linear(ncf*8*4*4, 1024),
                                 nn.BatchNorm1d(1024),
                                 nn.LeakyReLU(0.2, inplace=True),
-                                nn.Linear(1024, 10),)
+                                nn.Linear(1024, 10))
 
     def forward(self, input):
         out = self.main(input)
