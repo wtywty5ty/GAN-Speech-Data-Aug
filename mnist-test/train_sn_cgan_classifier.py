@@ -183,6 +183,7 @@ class CDCGAN_Classifier(object):
             plt.xlabel('Iterations')
             plt.ylabel('Generator\'s loss')
             plt.savefig('%s/g_loss.png' % opt.outf)
+            plt.close('all')
             # do checkpointing
             if epoch % 30 == 0:
                 torch.save(self.G, '%s/checkpoints/netG_epoch_%d.pkl' % (opt.outf, epoch))

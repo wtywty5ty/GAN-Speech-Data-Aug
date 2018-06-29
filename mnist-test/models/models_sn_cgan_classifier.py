@@ -50,16 +50,22 @@ class _netD(nn.Module):
         self.main = nn.Sequential(
             # state size. 1 x 32 x 32
             SNConv2d(1, ndf, 3, 1, 1, bias=True),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 32 x 32
-            SNConv2d(ndf , ndf * 2, 4, 2, 1, bias=True),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 16 x 16
-            SNConv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=True),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 8 x 8
-            SNConv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=True),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.1, inplace=True),
+            SNConv2d(ndf, ndf, 4, 2, 1, bias=True),
+            nn.LeakyReLU(0.1, inplace=True),
+            # state size. (ndf) x 16 x 16
+            SNConv2d(ndf, ndf * 2, 3, 1, 1, bias=True),
+            nn.LeakyReLU(0.1, inplace=True),
+            SNConv2d(ndf * 2, ndf * 2, 4, 2, 1, bias=True),
+            nn.LeakyReLU(0.1, inplace=True),
+            # state size. (ndf*2) x 8 x 8
+            SNConv2d(ndf * 2, ndf * 4, 3, 1, 1, bias=True),
+            nn.LeakyReLU(0.1, inplace=True),
+            SNConv2d(ndf * 4, ndf * 4, 4, 2, 1, bias=True),
+            nn.LeakyReLU(0.1, inplace=True),
+            # state size. (ndf*4) x 4 x 4
+            SNConv2d(ndf * 4, ndf * 8, 3, 1, 1, bias=True),
+            nn.LeakyReLU(0.1, inplace=True),
         )
 
         self.ln = nn.Sequential(SNLinear(ndf*8*4*4, 1024),
