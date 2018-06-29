@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.autograd import Variable
 from torchvision import datasets, transforms
 import torchvision.utils as vutils
 import torch.utils.data
@@ -27,7 +26,7 @@ def concat(z,y):
     return torch.cat([z, y], 1)
 
 
-def sample_yz():
+def sample_yz(device):
     temp_z_ = torch.randn(10, 100)
     fixed_z_ = temp_z_
     fixed_y_ = torch.zeros(10, 1)
@@ -41,12 +40,13 @@ def sample_yz():
     fixed_y_label_.scatter_(1, fixed_y_.type(torch.LongTensor), 1)
     fixed_y_label_ = fixed_y_label_.view(-1, 10)
 
-    return fixed_z_, fixed_y_label_
+    return fixed_z_.to(device), fixed_y_label_.to(device)
 
 
 class CDCGAN_Classifier(object):
-    def __init__(self, generator, discriminator, classifier, opt):
+    def __init__(self, generator, discriminator, classifier, opt, device):
         self.opt = opt
+        self.device =device
         # data
         dataset = datasets.MNIST(root='../data/mnist', download=True,
                            transform=transforms.Compose([
@@ -55,34 +55,23 @@ class CDCGAN_Classifier(object):
                                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]))
         self.dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batchsize, shuffle=True)
 
-        self.X = torch.FloatTensor(opt.batchsize, 1, opt.map_size[0], opt.map_size[1])
-        self.z = torch.FloatTensor(opt.batchsize, opt.nz)
-        self.label = torch.FloatTensor(opt.batchsize)
         onehot = torch.zeros(10, 10)
-        self.onehot = onehot.scatter_(1, torch.LongTensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).view(10, 1), 1)
-        self.fixed_z, self.fixed_y = sample_yz()
+        self.onehot = onehot.scatter_(1, torch.LongTensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).view(10, 1), 1).to(device)
+        self.fixed_z, self.fixed_y = sample_yz(device)
 
         # nets
-        self.G = generator(opt.nz, opt.nclass)
+        self.G = generator(opt.nz, opt.nclass).to(device)
         self.G.apply(weight_filler)
-        self.D = discriminator()
+        self.D = discriminator().to(device)
         self.D.apply(weight_filler)
-        self.C = classifier()
+        self.C = classifier().to(device)
         self.C.apply(weight_filler)
 
         # criteria
         self.criteria_DG = nn.BCELoss()
         self.criteria_C = nn.CrossEntropyLoss()
 
-        if opt.cuda:
-            self.G.cuda()
-            self.D.cuda()
-            self.C.cuda()
-            self.criteria_DG.cuda()
-            self.criteria_C.cuda()
-            self.X, self.z, self.label, self.onehot = self.X.cuda(), self.z.cuda(), self.label.cuda(), self.onehot.cuda()
-            self.fixed_y, self.fixed_z = self.fixed_y.cuda(), self.fixed_z.cuda()
-
+        # solver
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=0.0002, betas=(0.5, 0.9))
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=0.0002, betas=(0.5, 0.9))
         self.C_optimizer = optim.Adam(self.C.parameters(), lr=0.0002, betas=(0.5, 0.9))
@@ -95,6 +84,7 @@ class CDCGAN_Classifier(object):
         train_hist['total_ptime'] = []
 
         opt = self.opt
+        device = self.device
         n_epochs = opt.n_epochs
         print('training start!')
         start_time = time.time()
@@ -108,30 +98,27 @@ class CDCGAN_Classifier(object):
                 # train with real
                 self.D.zero_grad()
                 real_image, real_y = data
+                real_image, real_y = real_image.to(device), real_y.to(device)
                 batch_size = real_image.size(0)
 
-                self.X.resize_(real_image.size()).copy_(real_image)
-                X_real = Variable(self.X)
-                self.label.resize_(batch_size).fill_(1)
-                label_real = Variable(self.label)
+                label_real = torch.ones(batch_size, dtype=torch.float, device=device)
 
-                output = self.D(X_real)
-                errD_real = self.criteria_DG(output, label_real)
+                outputD_real = self.D(real_image)
+                errD_real = self.criteria_DG(outputD_real, label_real)
                 errD_real.backward()
-                D_x = output.data.mean()
+                D_X = outputD_real.data.mean()
 
                 # train with fake
-                self.z.resize_(batch_size, self.z.size(1)).normal_(0, 1)
-                noise = Variable(self.z)
-                y_ = (torch.rand(batch_size, 1) * 10).type(torch.LongTensor).squeeze()
-                y_fake_ = Variable(self.onehot[y_])
+                noise = real_image.new_zeros(batch_size, opt.nz).normal_(0, 1)
+                y_ = (torch.rand(batch_size, 1) * 10).type(torch.LongTensor).squeeze().to(device)
+                y_fake_ = self.onehot[y_]
 
                 fake = self.G(concat(noise, y_fake_))
-                label_fake = Variable(self.label.fill_(0))
-                output = self.D(fake.detach())
-                errD_fake = self.criteria_DG(output, label_fake)
+                label_fake = torch.zeros_like(label_real)
+                outputD_fake = self.D(fake.detach())
+                errD_fake = self.criteria_DG(outputD_fake, label_fake)
                 errD_fake.backward()
-                D_G = output.data.mean()
+                D_G = outputD_fake.data.mean()
                 errD = errD_real + errD_fake
                 self.D_optimizer.step()
 
@@ -140,11 +127,11 @@ class CDCGAN_Classifier(object):
                 ###########################
                 if step % opt.n_dis == 0:
                     self.G.zero_grad()
-                    label_Gfake = Variable(self.label.fill_(1))  # fake labels are real for generator cost
+                    label_Gfake = torch.ones_like(label_real)  # fake labels are real for generator cost
                     outputD = self.D(fake)
                     errG_D = self.criteria_DG(outputD, label_Gfake)
                     outputC = self.C(fake)
-                    errG_C = self.criteria_C(outputC, y_.cuda())
+                    errG_C = self.criteria_C(outputC, y_)
                     errG = errG_C + errG_D
                     errG.backward()
                     self.G_optimizer.step()
@@ -155,8 +142,8 @@ class CDCGAN_Classifier(object):
                     self.C.zero_grad()
                     #y_real_ = self.onehot[real_y]
                     #y_real_ = Variable(y_real_)
-                    output = self.C(X_real)
-                    errC = self.criteria_C(output, real_y.cuda())
+                    output = self.C(real_image)
+                    errC = self.criteria_C(output, real_y)
                     errC.backward()
                     self.C_optimizer.step()
 
@@ -166,7 +153,7 @@ class CDCGAN_Classifier(object):
                 if i % 20 == 0:
                     print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
                           % (epoch, n_epochs, i, len(self.dataloader),
-                             errD.item(), errG.item(), errC.item(), D_x, D_G))
+                             errD.item(), errG.item(), errC.item(), D_X, D_G))
                 if i % 100 == 0:
                     vutils.save_image(real_image,
                                       '%s/images/real_samples.png' % opt.outf,
@@ -235,10 +222,11 @@ if __name__ == '__main__':
     random.seed(opt.manualSeed)
     torch.manual_seed(opt.manualSeed)
 
-    if opt.cuda:
+    if torch.cuda.is_available():
+        device = torch.device('cuda:0')
         torch.cuda.manual_seed_all(opt.manualSeed)
-        torch.cuda.set_device(opt.gpu_ids[0])
-
+    else:
+        device = torch.device('cpu')
     cudnn.benchmark = True
 
-    CDCGAN_Classifier(_netG, _netD, _netC, opt).train()
+    CDCGAN_Classifier(_netG, _netD, _netC, opt, device).train()
