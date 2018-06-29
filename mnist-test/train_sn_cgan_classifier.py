@@ -10,7 +10,7 @@ import random
 import argparse
 import pickle
 import os,time
-from models.models_cdcgan_classifier import _netG, _netD, _netC
+from models.models_sn_cgan_classifier import _netG, _netD, _netC
 
 
 def weight_filler(m):
@@ -75,6 +75,9 @@ class CDCGAN_Classifier(object):
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=0.0002, betas=(0, 0.9))
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=0.0002, betas=(0, 0.9))
         self.C_optimizer = optim.Adam(self.C.parameters(), lr=0.0002, betas=(0, 0.9))
+        self.G_scheduler = optim.lr_scheduler.ExponentialLR(self.G_optimizer, gamma=0.99)
+        self.D_scheduler = optim.lr_scheduler.ExponentialLR(self.D_optimizer, gamma=0.99)
+        self.C_scheduler = optim.lr_scheduler.ExponentialLR(self.C_optimizer, gamma=0.99)
 
     def train(self):
         train_hist = {}
@@ -140,8 +143,6 @@ class CDCGAN_Classifier(object):
                 # (2) Update C network: maximize log(C(x))
                 ###########################
                     self.C.zero_grad()
-                    #y_real_ = self.onehot[real_y]
-                    #y_real_ = Variable(y_real_)
                     output = self.C(real_image)
                     errC = self.criteria_C(output, real_y)
                     errC.backward()
@@ -163,6 +164,9 @@ class CDCGAN_Classifier(object):
                                       '%s/images/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
                                       nrow=10, normalize=True)
 
+            self.D_scheduler.step()
+            self.G_scheduler.step()
+            self.C_scheduler.step()
             epoch_end_time = time.time()
             per_epoch_ptime = epoch_end_time - epoch_start_time
             print('[%d/%d] - ptime: %.2f' % ((epoch + 1), n_epochs, per_epoch_ptime))
@@ -208,7 +212,7 @@ if __name__ == '__main__':
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[32, 32], help='size of feature map')
-    parser.add_argument('--outf', default='outf/cdcgan_classifier', help="path to output files)")
+    parser.add_argument('--outf', default='outf/sn_cgan_classifier_scheduler', help="path to output files)")
     opt = parser.parse_args()
     print(opt)
 
