@@ -56,8 +56,11 @@ class CDCGAN_Classifier(object):
         DIR, DIR, DIR, DIR, DIR, DIR, DIR, DIR)
         self.phoneMap = phoneMap
 
-        onehot = torch.zeros(10, 10)
-        self.onehot = onehot.scatter_(1, torch.LongTensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).view(10, 1), 1).to(device)
+        onehot = torch.zeros(opt.nclass, opt.nclass)
+        v = []
+        for i in range(opt.nclass):
+            v.append(i)
+        self.onehot = onehot.scatter_(1, torch.LongTensor(v).view(opt.nclass, 1), 1)
         self.fixed_z, self.fixed_y = sample_yz(device)
 
         # nets
@@ -218,7 +221,8 @@ if __name__ == '__main__':
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
     parser.add_argument('--batchsize', type=int, default=100, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
-    parser.add_argument('--outf', default='outf/sn_cgan_classifier_scheduler_critic2', help="path to output files)")
+    parser.add_argument('--phone', default='aa', help='phone')
+    parser.add_argument('--outf', default='outf/sn_classifier_critic2/log_aa', help="path to output files)")
     opt = parser.parse_args()
 
     phoneMap = triphoneMap('slist.txt', opt.phone)
