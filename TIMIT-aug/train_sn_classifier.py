@@ -46,15 +46,15 @@ def sample_yz(device):
 
 
 class CDCGAN_Classifier(object):
-    def __init__(self, generator, discriminator, classifier, opt, device):
+    def __init__(self, generator, discriminator, classifier, opt, device, phoneMap):
         self.opt = opt
-        self.device =device
+        self.device = device
         # data
         # read data from TIMIT
         DIR = '/home/ty/tw472/triphone/temp.tri_Z/dnntrain'
         self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune.cfg -S %s/lib/flists/train.scp -l LABEL -I %s/train.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
         DIR, DIR, DIR, DIR, DIR, DIR, DIR, DIR)
-        self.phoneMap = triphoneMap('slist.txt', opt.phone)
+        self.phoneMap = phoneMap
 
         onehot = torch.zeros(10, 10)
         self.onehot = onehot.scatter_(1, torch.LongTensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).view(10, 1), 1).to(device)
@@ -210,16 +210,19 @@ class CDCGAN_Classifier(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train DCGAN model')
-    parser.add_argument('--n_epochs', type=int, default=20, help='number of epochs of training')
+    parser.add_argument('--n_epochs', type=int, default=30, help='number of epochs of training')
     parser.add_argument('--gpu_ids', default=[0, 1, 2, 3], help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
-    parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
+    parser.add_argument('--n_dis', type=int, default=2, help='discriminator critic iters')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
-    parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
-    parser.add_argument('--map_size', default=[32, 32], help='size of feature map')
+    parser.add_argument('--batchsize', type=int, default=100, help='training batch size')
+    parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
     parser.add_argument('--outf', default='outf/sn_cgan_classifier_scheduler_critic2', help="path to output files)")
     opt = parser.parse_args()
+
+    phoneMap = triphoneMap('slist.txt', opt.phone)
+    opt.nclass = phoneMap.nlabels()
     print(opt)
 
     os.makedirs(opt.outf, exist_ok=True)
@@ -239,4 +242,4 @@ if __name__ == '__main__':
         device = torch.device('cpu')
     cudnn.benchmark = True
 
-    CDCGAN_Classifier(_netG, _netD, _netC, opt, device).train()
+    CDCGAN_Classifier(_netG, _netD, _netC, opt, device, phoneMap).train()
