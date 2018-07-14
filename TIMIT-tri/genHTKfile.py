@@ -10,7 +10,7 @@ from utils import triphoneMap
 class genHTKfile(object):
     def __init__(self, phone, ID):
         self.mode = 'average1'  # almost fixed file length
-        # 'average2' mode: non fixed file length. Fixed tied-state length instead.
+        # 'average2' mode: non fixed file length. Fixed split size instead.
         self.nSamples = 18000
         self.sampPeriod = 100000
         self.sampSize = 2080
@@ -26,33 +26,35 @@ class genHTKfile(object):
 
 
     def genSamples(self):
-        if self.mode == 'average1':
-            phoneMap = self.phoneMap
-            nclass = phoneMap.nlabels()
-            splitSize = self.splitSize
-            print('Start generating samples:')
-            for id in range(nclass):
-                noise = torch.randn(splitSize, 100).cuda()
-                y = torch.zeros(splitSize, nclass).cuda()
-                y[:, id] = 1
-                gen_data = self.generator(torch.cat([noise, y], 1)).squeeze()
-                gen_data = gen_data[:, :13, :]
-                gen_data = 3 * gen_data
+        phoneMap = self.phoneMap
+        nclass = phoneMap.nlabels()
+        splitSize = self.splitSize
+        print('Start generating samples:')
+        for id in range(nclass):
+            noise = torch.randn(splitSize, 100).cuda()
+            y = torch.zeros(splitSize, nclass).cuda()
+            y[:, id] = 1
+            gen_data = self.generator(torch.cat([noise, y], 1)).squeeze()
+            gen_data = gen_data[:, :13, :]
+            gen_data = 3 * gen_data
 
-                if id == 0:
-                    gen_data_ = gen_data
-                else:
-                    gen_data_ = torch.cat([gen_data_, gen_data], 0)
-                print('..'+str(id), end="")
-                
-            print('..finish!')
-            return gen_data_.cpu().view(-1)
+            samples = gen_data.cpu().view(-1).detach().numpy()
+            body_ = samples.astype('>f').tostring()
+            if id == 0:
+                print(samples[:520])
+                body = body_
+            else:
+                body = body + body_
+            #print('..'+str(id), end="")
+
+        print('..finish!')
+        return body
 
 
     def genfbk(self):
-        samples = self.genSamples().detach().numpy()
-        print(samples[:520])
-        body = samples.astype('>f').tostring()
+        body = self.genSamples()
+
+        # body = samples.astype('>f').tostring()
         # body = struct.pack('>%df'%len(samples), *samples)
         header = struct.pack('>iihh', self.nSamples, self.sampPeriod, self.sampSize, self.parmKind) 
         with open('HTKFILE/fbk/%s_gan_%d.fbk' % (self.phone, self.ID), 'wb') as f:
