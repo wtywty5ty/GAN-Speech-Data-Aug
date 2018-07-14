@@ -41,11 +41,10 @@ class genHTKfile(object):
             samples = gen_data.cpu().view(-1).detach().numpy()
             body_ = samples.astype('>f').tostring()
             if id == 0:
-                print(samples[:520])
                 body = body_
             else:
                 body = body + body_
-            #print('..'+str(id), end="")
+            print('..'+str(id), end="")
 
         print('..finish!')
         return body
@@ -53,9 +52,6 @@ class genHTKfile(object):
 
     def genfbk(self):
         body = self.genSamples()
-
-        # body = samples.astype('>f').tostring()
-        # body = struct.pack('>%df'%len(samples), *samples)
         header = struct.pack('>iihh', self.nSamples, self.sampPeriod, self.sampSize, self.parmKind) 
         with open('HTKFILE/fbk/%s_gan_%d.fbk' % (self.phone, self.ID), 'wb') as f:
             f.write(header+body)
