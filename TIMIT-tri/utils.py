@@ -151,7 +151,6 @@ def generateData(generator, batchsize, nclass, class_id):
 
     gen_data = generator(torch.cat([noise,y], 1)).squeeze()
     gen_data = 3 * gen_data
-    print(gen_data.size())
 
     rows = gen_data.size(0)
     columns = gen_data.size(1) * gen_data.size(2)
