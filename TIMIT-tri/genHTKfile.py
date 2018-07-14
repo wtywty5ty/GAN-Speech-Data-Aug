@@ -26,7 +26,7 @@ class genHTKfile(object):
 
 
     def genSamples(self):
-        if self.mode == 'average':
+        if self.mode == 'average1':
             phoneMap = self.phoneMap
             nclass = phoneMap.nlabels()
             splitSize = self.splitSize
