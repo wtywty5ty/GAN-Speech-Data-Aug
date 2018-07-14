@@ -1,15 +1,17 @@
 import torch.nn as nn
+import torch.nn.functional as F
 from src.snlayers.snconv2d import SNConv2d
 from src.snlayers.snlinear import SNLinear
 import torch
 
 
 class _netG(nn.Module):
-    def __init__(self, nz, nclass):
+    def __init__(self, nz, nclass, dim):
         super(_netG, self).__init__()
         ngf = 64
         self.ngf = ngf
-        self.ln = nn.Sequential(nn.Linear(nz+nclass, 1024),
+        self.emb = nn.Embedding(nclass,dim)
+        self.ln = nn.Sequential(nn.Linear(nz+5, 1024),
                                 nn.BatchNorm1d(1024),
                                 nn.ReLU(True),
                                 nn.Linear(1024, ngf*8*2*5),
@@ -36,7 +38,10 @@ class _netG(nn.Module):
             # state size. (nc) x initial size x 8
         )
 
-    def forward(self, input):
+    def forward(self, z, y):
+        embd = self.emb(y).squeeze()
+        embd = F.normalize(embd, p=2, dim=1)
+        input = torch.cat([z, embd], 1)
         ln = self.ln(input)
         l1= ln.view(ln.shape[0], self.ngf*8, 2, 5)
         output = self.main(l1)
@@ -81,36 +86,33 @@ class _netD(nn.Module):
 
 
 class _netC(nn.Module):
-    def __init__(self):
+    def __init__(self, nclass):
         super(_netC, self).__init__()
-        ncf = 64
-        self.main = nn.Sequential(
-            # state size. 1 x 32 x 32
-            nn.Conv2d(1, ncf, 4, 2, 1, bias=True),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 16 x 16
-            nn.Conv2d(ncf , ncf * 2, 4, 2, 1, bias=True),
-            nn.BatchNorm2d(ncf*2),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 8 x 8
-            nn.Conv2d(ncf * 2, ncf * 4, 4, 2, 1, bias=True),
-            nn.BatchNorm2d(ncf*4),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 4 x 4
-            nn.Conv2d(ncf * 4, ncf * 8, 3, 1, 1, bias=True),
-            nn.BatchNorm2d(ncf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
-        )
+        self.main = nn.Sequential(nn.Linear(16*40, 500),
+                                  nn.BatchNorm1d(500),
+                                  nn.ReLU(True),
+                                  nn.Linear(500, 500),
+                                  nn.BatchNorm1d(500),
+                                  nn.ReLU(True),
+                                  nn.Linear(500, 500),
+                                  nn.BatchNorm1d(500),
+                                  nn.ReLU(True),
+                                  nn.Linear(500, 500),
+                                  nn.BatchNorm1d(500),
+                                  nn.ReLU(True),
+                                  nn.Linear(500, 500),
+                                  nn.BatchNorm1d(500),
+                                  nn.ReLU(True),
+                                  nn.Linear(500, 500),
+                                  nn.BatchNorm1d(500),
+                                  nn.ReLU(True),
+                                  nn.Linear(500, nclass),
+                                  )
 
-        self.ln = nn.Sequential(nn.Linear(ncf*8*2*5, 1024),
-                                nn.BatchNorm1d(1024),
-                                nn.LeakyReLU(0.2, inplace=True),
-                                nn.Linear(1024, 10))
 
     def forward(self, input):
+        input = input.view(input.shape[0], -1)
         out = self.main(input)
-        out = out.view(out.shape[0], -1)
-        out = self.ln(out)
         return out.squeeze()
 
 

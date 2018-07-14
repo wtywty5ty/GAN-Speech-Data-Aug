@@ -10,8 +10,8 @@ import argparse
 import pickle
 import os,time
 import subprocess
-from utils import processTriData, triphoneMap
-from models.models_sn_cgan_classifier import _netG, _netD, _netC
+from utils import *
+from models.models_sncgan_classifier_embed import _netG, _netD, _netC
 plt.switch_backend('agg')
 
 
@@ -24,29 +24,9 @@ def weight_filler(m):
         m.bias.data.fill_(0)
 
 
-def concat(z,y):
-    return torch.cat([z, y], 1)
-
-
-def sample_yz(device):
-    temp_z_ = torch.randn(10, 100)
-    fixed_z_ = temp_z_
-    fixed_y_ = torch.zeros(10, 1)
-    for i in range(9):
-        fixed_z_ = torch.cat([fixed_z_, temp_z_], 0)
-        temp = torch.ones(10, 1) + i
-        fixed_y_ = torch.cat([fixed_y_, temp], 0)
-
-    fixed_z_ = fixed_z_.view(-1, 100)
-    fixed_y_label_ = torch.zeros(100, 10)
-    fixed_y_label_.scatter_(1, fixed_y_.type(torch.LongTensor), 1)
-    fixed_y_label_ = fixed_y_label_.view(-1, 10)
-
-    return fixed_z_.to(device), fixed_y_label_.to(device)
-
 
 class CDCGAN_Classifier(object):
-    def __init__(self, generator, discriminator, classifier, opt, device, phoneMap):
+    def __init__(self, generator, discriminator, classifier, opt, device):
         self.opt = opt
         self.device = device
         # data
@@ -54,26 +34,19 @@ class CDCGAN_Classifier(object):
         DIR = '/home/ty/tw472/triphone/temp.tri_Z/dnntrain'
         self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune.cfg -S %s/lib/flists/train.scp -l LABEL -I %s/train.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
         DIR, DIR, DIR, DIR, DIR, DIR, DIR, DIR)
-        self.phoneMap = phoneMap
 
-        onehot = torch.zeros(opt.nclass, opt.nclass)
-        v = []
-        for i in range(opt.nclass):
-            v.append(i)
-        self.onehot = onehot.scatter_(1, torch.LongTensor(v).view(opt.nclass, 1), 1)
-        self.fixed_z, self.fixed_y = sample_yz(device)
-
+        embed_dim = 50
         # nets
-        self.G = generator(opt.nz, opt.nclass).to(device)
+        self.G = generator(opt.nz, opt.nclass, embed_dim).to(device)
         self.G.apply(weight_filler)
         self.D = discriminator().to(device)
         self.D.apply(weight_filler)
-        self.C = classifier().to(device)
+        self.C = classifier(opt.nclass).to(device)
         self.C.apply(weight_filler)
 
         # criteria
-        self.criteria_DG = nn.BCELoss()
-        self.criteria_C = nn.CrossEntropyLoss()
+        self.criteria_DG = nn.BCELoss().to(device)
+        self.criteria_C = nn.CrossEntropyLoss().to(device)
 
         # solver
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=0.0002, betas=(0, 0.9))
@@ -101,7 +74,7 @@ class CDCGAN_Classifier(object):
             last = False
             iter = 0
             while not last:
-                size, dataloader, last = processTriData(s, opt.batchsize, self.phoneMap, 16)
+                size, dataloader, last = processDataUni(s, opt.batchsize, 16)
                 for data in dataloader:
                     iter += 1
                     ############################
@@ -122,10 +95,9 @@ class CDCGAN_Classifier(object):
 
                     # train with fake
                     noise = real_image.new_zeros(batch_size, opt.nz).normal_(0, 1)
-                    y_ = (torch.rand(batch_size, 1) * 10).type(torch.LongTensor).squeeze().to(device)
-                    y_fake_ = self.onehot[y_]
+                    y_ = (torch.rand(batch_size, 1) * opt.nclass).type(torch.LongTensor).squeeze().to(device)
 
-                    fake = self.G(concat(noise, y_fake_))
+                    fake = self.G(noise, y_)
                     label_fake = torch.zeros_like(label_real)
                     outputD_fake = self.D(fake.detach())
                     errD_fake = self.criteria_DG(outputD_fake, label_fake)
@@ -144,7 +116,7 @@ class CDCGAN_Classifier(object):
                         errG_D = self.criteria_DG(outputD, label_Gfake)
                         outputC = self.C(fake)
                         errG_C = self.criteria_C(outputC, y_)
-                        errG = errG_C + errG_D
+                        errG = 0.01*errG_C + errG_D
                         errG.backward()
                         self.G_optimizer.step()
 
@@ -161,16 +133,10 @@ class CDCGAN_Classifier(object):
                         train_hist['G_losses'].append(errG.item())
 
                     if iter % 20 == 0:
-                        print('[%d/%d][iter: %d] Loss_D: %.4f Loss_G: %.4f Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
-                              % (epoch, n_epochs, iter, errD.item(), errG.item(), errC.item(), D_X, D_G))
-                    if iter % 100 == 0:
-                        vutils.save_image(real_image,
-                                          '%s/images/real_samples.png' % opt.outf,
-                                          normalize=True)
-                        fake = self.G(concat(self.fixed_z, self.fixed_y))
-                        vutils.save_image(fake.data,
-                                          '%s/images/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
-                                          nrow=10, normalize=True)
+                        print('[%d/%d][iter: %d] Loss_D: %.4f Loss_G: %.4f (%.4f/ %.4f) Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
+                              % (epoch, n_epochs, iter, errD.item(), errG.item(),errG_D.item(), errG_C.item(), errC.item(), D_X, D_G))
+
+                    
 
             self.D_scheduler.step()
             self.G_scheduler.step()
@@ -193,7 +159,7 @@ class CDCGAN_Classifier(object):
             plt.savefig('%s/g_loss.png' % opt.outf)
             plt.close('all')
             # do checkpointing
-            if epoch % 30 == 0:
+            if epoch % 10 == 0:
                 torch.save(self.G, '%s/checkpoints/netG_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.D, '%s/checkpoints/netD_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.C, '%s/checkpoints/netC_epoch_%d.pkl' % (opt.outf, epoch))
@@ -216,17 +182,13 @@ if __name__ == '__main__':
     parser.add_argument('--n_epochs', type=int, default=30, help='number of epochs of training')
     parser.add_argument('--gpu_ids', default=[0, 1, 2, 3], help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
-    parser.add_argument('--n_dis', type=int, default=2, help='discriminator critic iters')
+    parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
-    parser.add_argument('--nclass', type=int, default=10, help='number of classes')
-    parser.add_argument('--batchsize', type=int, default=100, help='training batch size')
+    parser.add_argument('--nclass', type=int, default=808, help='number of classes')
+    parser.add_argument('--batchsize', type=int, default=256, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
-    parser.add_argument('--phone', default='aa', help='phone')
-    parser.add_argument('--outf', default='outf/sn_classifier_critic2/log_aa', help="path to output files)")
+    parser.add_argument('--outf', default='outf/sn_classifier/log_singleGAN', help="path to output files)")
     opt = parser.parse_args()
-
-    phoneMap = triphoneMap('slist.txt', opt.phone)
-    opt.nclass = phoneMap.nlabels()
     print(opt)
 
     os.makedirs(opt.outf, exist_ok=True)
@@ -240,10 +202,10 @@ if __name__ == '__main__':
     torch.manual_seed(opt.manualSeed)
 
     if torch.cuda.is_available():
-        device = torch.device('cuda:0')
+        device = torch.device('cuda')
         torch.cuda.manual_seed_all(opt.manualSeed)
     else:
         device = torch.device('cpu')
     cudnn.benchmark = True
 
-    CDCGAN_Classifier(_netG, _netD, _netC, opt, device, phoneMap).train()
+    CDCGAN_Classifier(_netG, _netD, _netC, opt, device).train()

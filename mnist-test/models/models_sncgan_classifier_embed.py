@@ -9,7 +9,8 @@ class _netG(nn.Module):
         super(_netG, self).__init__()
         ngf = 64
         self.ngf = ngf
-        self.ln = nn.Sequential(nn.Linear(nz+nclass, 1024),
+        self.embed = nn.Embedding(nclass, 10)
+        self.ln = nn.Sequential(nn.Linear(nz+10, 1024),
                                 nn.BatchNorm1d(1024),
                                 nn.ReLU(True),
                                 nn.Linear(1024, ngf*8*4*4),
@@ -36,7 +37,9 @@ class _netG(nn.Module):
             # state size. (nc) x 32 x 32
         )
 
-    def forward(self, input):
+    def forward(self, z, y):
+        emb = self.embed(y).squeeze()
+        input = torch.cat([z, emb], 1)
         ln = self.ln(input)
         l1= ln.view(ln.shape[0], self.ngf*8, 4, 4)
         output = self.main(l1)

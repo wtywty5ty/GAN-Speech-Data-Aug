@@ -10,7 +10,7 @@ import random
 import argparse
 import pickle
 import os,time
-from models.models_sn_cgan_classifier import _netG, _netD, _netC
+from models.models_sncgan_classifier_embed import _netG, _netD, _netC
 
 
 def weight_filler(m):
@@ -36,11 +36,8 @@ def sample_yz(device):
         fixed_y_ = torch.cat([fixed_y_, temp], 0)
 
     fixed_z_ = fixed_z_.view(-1, 100)
-    fixed_y_label_ = torch.zeros(100, 10)
-    fixed_y_label_.scatter_(1, fixed_y_.type(torch.LongTensor), 1)
-    fixed_y_label_ = fixed_y_label_.view(-1, 10)
 
-    return fixed_z_.to(device), fixed_y_label_.to(device)
+    return fixed_z_.to(device), fixed_y_.type(torch.LongTensor).to(device)
 
 
 class CDCGAN_Classifier(object):
@@ -64,7 +61,7 @@ class CDCGAN_Classifier(object):
         self.G.apply(weight_filler)
         self.D = discriminator().to(device)
         self.D.apply(weight_filler)
-        self.C = classifier().to(device)
+        self.C = classifier(opt.nclass).to(device)
         self.C.apply(weight_filler)
 
         # criteria
@@ -116,7 +113,7 @@ class CDCGAN_Classifier(object):
                 y_ = (torch.rand(batch_size, 1) * 10).type(torch.LongTensor).squeeze().to(device)
                 y_fake_ = self.onehot[y_]
 
-                fake = self.G(concat(noise, y_fake_))
+                fake = self.G(noise, y_)
                 label_fake = torch.zeros_like(label_real)
                 outputD_fake = self.D(fake.detach())
                 errD_fake = self.criteria_DG(outputD_fake, label_fake)
@@ -152,14 +149,14 @@ class CDCGAN_Classifier(object):
                     train_hist['G_losses'].append(errG.item())
 
                 if i % 20 == 0:
-                    print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
+                    print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f (%.4f / %.4f) Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
                           % (epoch, n_epochs, i, len(self.dataloader),
-                             errD.item(), errG.item(), errC.item(), D_X, D_G))
+                             errD.item(), errG.item(), errG_D, errG_C, errC.item(), D_X, D_G))
                 if i % 100 == 0:
                     vutils.save_image(real_image,
                                       '%s/images/real_samples.png' % opt.outf,
                                       normalize=True)
-                    fake = self.G(concat(self.fixed_z, self.fixed_y))
+                    fake = self.G(self.fixed_z, self.fixed_y)
                     vutils.save_image(fake.data,
                                       '%s/images/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
                                       nrow=10, normalize=True)
@@ -185,7 +182,7 @@ class CDCGAN_Classifier(object):
             plt.savefig('%s/g_loss.png' % opt.outf)
             plt.close('all')
             # do checkpointing
-            if epoch % 30 == 0:
+            if epoch % 2 == 0:
                 torch.save(self.G, '%s/checkpoints/netG_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.D, '%s/checkpoints/netD_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.C, '%s/checkpoints/netC_epoch_%d.pkl' % (opt.outf, epoch))
@@ -205,7 +202,7 @@ class CDCGAN_Classifier(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train DCGAN model')
-    parser.add_argument('--n_epochs', type=int, default=20, help='number of epochs of training')
+    parser.add_argument('--n_epochs', type=int, default=5, help='number of epochs of training')
     parser.add_argument('--gpu_ids', default=[0, 1, 2, 3], help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
     parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
@@ -213,7 +210,7 @@ if __name__ == '__main__':
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[32, 32], help='size of feature map')
-    parser.add_argument('--outf', default='outf/sn_cgan_classifier_scheduler_critic2', help="path to output files)")
+    parser.add_argument('--outf', default='outf/sn_cgan_classifier_embedding', help="path to output files)")
     opt = parser.parse_args()
     print(opt)
 
