@@ -201,7 +201,7 @@ def generateData_all(generator, batchsize, nclass):
 
     flat_data = gen_data.view(-1)
 
-    buf = struct.pack('2i%sfi' % len(flat_data), rows, columns, *flat_data, 0)
+    buf = struct.pack('2i%sf' % len(flat_data), rows, columns, *flat_data)
     
     return buf
 

@@ -9,7 +9,8 @@ from utils import triphoneMap
 
 class genHTKfile(object):
     def __init__(self, phone, ID):
-        self.mode = 'average'
+        self.mode = 'average1'  # almost fixed file length
+        # 'average2' mode: non fixed file length. Fixed tied-state length instead.
         self.nSamples = 18000
         self.sampPeriod = 100000
         self.sampSize = 2080
@@ -19,9 +20,10 @@ class genHTKfile(object):
         G_PATH = 'outf/GAN_array/%s/netG_.pkl'%phone
         self.generator = torch.load(G_PATH).eval()
         self.phoneMap = triphoneMap('slist.txt', phone)
-        if self.mode == 'average':
+        if self.mode == 'average1':
             self.nSamples = 18000 - 18000 % self.phoneMap.nlabels()
             self.splitSize = self.nSamples//self.phoneMap.nlabels()
+
 
     def genSamples(self):
         if self.mode == 'average':
@@ -51,7 +53,7 @@ class genHTKfile(object):
         samples = self.genSamples().detach().numpy()
         print(samples[:520])
         body = samples.tobytes()
-        body = struct.pack('>%df'%len(samples), *samples)
+        # body = struct.pack('>%df'%len(samples), *samples)
         header = struct.pack('>iihh', self.nSamples, self.sampPeriod, self.sampSize, self.parmKind) 
         with open('HTKFILE/fbk/%s_gan_%d.fbk' % (self.phone, self.ID), 'wb') as f:
             f.write(header+body)

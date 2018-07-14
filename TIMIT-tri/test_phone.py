@@ -42,16 +42,16 @@ else:
 DIR = '/home/ty/tw472/triphone/FH7/dnntrain'
 HTKcmd = '%s/HNForward -C %s/basic.cfg -C %s/eval.cfg -H %s/hmm0/MMF %s/hmms.mlist'%(DIR,DIR,DIR,DIR,DIR)
 s = subprocess.Popen(HTKcmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-# debug
-for i in range(2):
-    s.stdin.write(buf)
-    s.stdin.flush()
-    row, column, results = testResults(s)
-    mean_list, std_list = returnMeanStd(results)
-    phone_id = phonemap.states[opt.tstate]
-    print('Classification correctness top1: %f' %correctness(results, phone_id, 1))
-    print('Classification correctness top3: %f' %correctness(results, phone_id, 3))
-    print('Classification correctness top5: %f' %correctness(results, phone_id, 5))
+
+s.stdin.write(buf)
+s.stdin.flush()
+row, column, results = testResults(s)
+mean_list, std_list = returnMeanStd(results)
+phone_id = phonemap.states[opt.tstate]
+print('Classification correctness top1: %f' %correctness(results, phone_id, 1))
+print('Classification correctness top3: %f' %correctness(results, phone_id, 3))
+print('Classification correctness top5: %f' %correctness(results, phone_id, 5))
+
 
 '''
 DIR = '/home/ty/tw472/MLSALT2/TIMIT/exp/FH5/dnntrain'
@@ -62,6 +62,8 @@ row, column, results = testResults(s)
 print('(phone level) Classification correctness top1: %f' %correctness_(results, opt.phoneID, 1))
 print('(phone level) Classification correctness top3: %f' %correctness_(results, opt.phoneID, 3))
 print('(phone level) Classification correctness top5: %f' %correctness_(results, opt.phoneID, 5))
+'''
+
 
 #top10
 top10 = mean_list.argsort()[-10:][::-1]
@@ -80,7 +82,7 @@ print('Saving Results ...')
 plt.savefig('%s/%s_results_top10.png' % (opt.evaluation, opt.tstate))
 plt.close()
 
-'''
+
 
 s.kill()
 
