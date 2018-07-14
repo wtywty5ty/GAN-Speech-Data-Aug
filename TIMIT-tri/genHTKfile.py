@@ -52,7 +52,7 @@ class genHTKfile(object):
     def genfbk(self):
         samples = self.genSamples().detach().numpy()
         print(samples[:520])
-        body = samples.tobytes()
+        body = samples.astype('>f').tostring()
         # body = struct.pack('>%df'%len(samples), *samples)
         header = struct.pack('>iihh', self.nSamples, self.sampPeriod, self.sampSize, self.parmKind) 
         with open('HTKFILE/fbk/%s_gan_%d.fbk' % (self.phone, self.ID), 'wb') as f:
