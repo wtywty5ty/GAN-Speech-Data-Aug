@@ -7,8 +7,9 @@ from utils import triphoneMap
 
 class genHTKfile(object):
     def __init__(self, phone, ID):
-        self.mode = 'average1'  # almost fixed file length
-        # 'average2' mode: non fixed file length. Fixed split size instead.
+        self.mode = 'equal_phone'  # almost fixed file size
+        # 'equal_state' mode: non fixed file length. Fixed split size instead
+        # 'prior'
         self.nSamples = 18000
         self.sampPeriod = 100000
         self.sampSize = 2080
@@ -18,7 +19,7 @@ class genHTKfile(object):
         G_PATH = 'outf/GAN_array/%s/netG_.pkl'%phone
         self.generator = torch.load(G_PATH).eval()
         self.phoneMap = triphoneMap('slist.txt', phone)
-        if self.mode == 'average1':
+        if self.mode == 'equal_phone':
             self.nSamples = 18000 - 18000 % self.phoneMap.nlabels()
             self.splitSize = self.nSamples//self.phoneMap.nlabels()
 
@@ -26,7 +27,7 @@ class genHTKfile(object):
         phoneMap = self.phoneMap
         nclass = phoneMap.nlabels()
         splitSize = self.splitSize
-        print('Start generating samples:')
+        print('Start generating %s samples:'%self.phone)
         for id in range(nclass):
             noise = torch.randn(splitSize, 100).cuda()
             y = torch.zeros(splitSize, nclass).cuda()

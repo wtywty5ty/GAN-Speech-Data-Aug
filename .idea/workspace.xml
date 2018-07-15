@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86ca6928-9d60-48ba-b075-39d0eeb2401a" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TIMIT-tri/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/TIMIT-tri/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,11 +25,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_sn_classifier_embed.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="train_sn_classifier_embed.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-733">
-              <caret line="49" column="74" lean-forward="true" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="74" />
+            <state relative-caret-position="407">
+              <caret line="154" column="44" lean-forward="true" selection-start-line="154" selection-start-column="44" selection-end-line="154" selection-end-column="44" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -78,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="171" column="15" lean-forward="true" selection-start-line="171" selection-start-column="15" selection-end-line="171" selection-end-column="15" />
+            <state relative-caret-position="-353">
+              <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -95,6 +90,18 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="76">
               <caret line="4" column="26" lean-forward="true" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="train_sn_classifier.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-836">
+              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -123,9 +130,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Embedding/train_embedding.py" />
-        <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py" />
       </list>
     </option>
   </component>
@@ -247,7 +254,21 @@
       <option name="project" value="LOCAL" />
       <updated>1531687214602</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Merge branch 'master' of https://github.com/wtywty5ty/GAN-Speech-Data-Aug&#10;&#10;# Conflicts:&#10;#&#9;.idea/modules.xml">
+      <created>1531689148448</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1531689148448</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix bugs">
+      <created>1531689412538</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1531689412538</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -288,7 +309,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update embedding" />
     <MESSAGE value="Merge branch 'master' of https://github.com/wtywty5ty/GAN-Speech-Data-Aug&#10;&#10;# Conflicts:&#10;#&#9;.idea/modules.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/wtywty5ty/GAN-Speech-Data-Aug&#10;&#10;# Conflicts:&#10;#&#9;.idea/modules.xml" />
+    <MESSAGE value="fix bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bugs" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
@@ -505,16 +527,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Embedding/train_embedding.py" />
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="26" selection-start-line="26" selection-end-line="27" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_preC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -583,22 +595,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py">
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-733">
-          <caret line="49" column="74" lean-forward="true" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="74" />
+        <state relative-caret-position="-353">
+          <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-836">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils.py">
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="171" column="15" lean-forward="true" selection-start-line="171" selection-start-column="15" selection-end-line="171" selection-end-column="15" />
+        <state relative-caret-position="407">
+          <caret line="154" column="44" lean-forward="true" selection-start-line="154" selection-start-column="44" selection-end-line="154" selection-end-column="44" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
