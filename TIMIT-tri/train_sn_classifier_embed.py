@@ -11,8 +11,21 @@ import pickle
 import os,time
 import subprocess
 from utils import processTriData, triphoneMap
-from models.models_sncgan_classifier_embed_norm import _netG, _netD, _netC
+from models.models_sncgan_classifier_mlp import _netG, _netD, _netC
 plt.switch_backend('agg')
+
+class embedNet(nn.Module):
+    def __init__(self, nclasses):
+        super(embedNet, self).__init__()
+        self.emb = nn.Embedding(nclasses, 20)
+        self.li = nn.Sequential(
+            nn.Linear(20, nclasses),
+        )
+
+    def forward(self, input):
+        output = self.emb(input)
+        output = self.li(output)
+        return output
 
 
 def weight_filler(m):
@@ -23,7 +36,8 @@ def weight_filler(m):
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
 
-
+def concat(z,y):
+    return torch.cat([z, y], 1)
 
 class CDCGAN_Classifier(object):
     def __init__(self, generator, discriminator, classifier, opt, device, phoneMap):
@@ -35,14 +49,16 @@ class CDCGAN_Classifier(object):
         self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune.cfg -S %s/lib/flists/train.scp -l LABEL -I %s/train.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
         DIR, DIR, DIR, DIR, DIR, DIR, DIR, DIR)
         self.phoneMap = phoneMap
-        embed_dim = 5
+        embed_dim = 20
+
         # nets
-        self.G = generator(opt.nz, opt.nclass, embed_dim).to(device)
+        self.G = generator(opt.nz, embed_dim).to(device)
         self.G.apply(weight_filler)
         self.D = discriminator().to(device)
         self.D.apply(weight_filler)
         self.C = classifier(opt.nclass).to(device)
         self.C.apply(weight_filler)
+        self.emb = torch.load('../embedding/out/embedNet.pkl').emb.to(device)
 
         # criteria
         self.criteria_DG = nn.BCELoss().to(device)
@@ -96,8 +112,9 @@ class CDCGAN_Classifier(object):
                     # train with fake
                     noise = real_image.new_zeros(batch_size, opt.nz).normal_(0, 1)
                     y_ = (torch.rand(batch_size, 1) * opt.nclass).type(torch.LongTensor).squeeze().to(device)
+                    y_fake_ = self.emb(y_).detach()
 
-                    fake = self.G(noise, y_)
+                    fake = self.G(concat(noise, y_fake_))
                     label_fake = torch.zeros_like(label_real)
                     outputD_fake = self.D(fake.detach())
                     errD_fake = self.criteria_DG(outputD_fake, label_fake)
@@ -194,7 +211,7 @@ if __name__ == '__main__':
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
     parser.add_argument('--phone', default='aa', help='phone')
-    parser.add_argument('--outf', default='outf/sn_classifier/log_aa_embed_norm', help="path to output files)")
+    parser.add_argument('--outf', default='outf/embed/aa', help="path to output files)")
     opt = parser.parse_args()
 
     phoneMap = triphoneMap('slist.txt', opt.phone)
