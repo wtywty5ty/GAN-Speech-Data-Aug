@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/GAN-Speech-Data-Augmentation.iml" filepath="$PROJECT_DIR$/.idea/GAN-Speech-Data-Augmentation.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/.idea/GAN-Speech-Data-Aug.iml" filepath="$PROJECT_DIR$/.idea/GAN-Speech-Data-Aug.iml" />
->>>>>>> eccaf32733a4605fa7e74034a2475bd30a34a2d5
     </modules>
   </component>
 </project>

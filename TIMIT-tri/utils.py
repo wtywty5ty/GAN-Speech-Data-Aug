@@ -1,6 +1,7 @@
 import struct
 import numpy as np
 import torch
+from embedding.train_embedding import embedNet
 
 
 def processData(s, batchsize, phone_id, stack_w):
@@ -166,8 +167,11 @@ def generateDataEmbd(generator, batchsize, class_id):
     noise = torch.randn(batchsize, 100).cuda()
     y = torch.zeros(batchsize).type(torch.LongTensor).cuda()
     y.fill_(class_id)
+    emb = torch.load('embedding/out/embedNet.pkl').emb.cuda()
 
-    gen_data = generator(noise,y).squeeze()
+    y_ = emb(y)
+
+    gen_data = generator(torch.cat([noise, y_], 1)).squeeze()
     gen_data = 3 * gen_data
 
     rows = gen_data.size(0)
