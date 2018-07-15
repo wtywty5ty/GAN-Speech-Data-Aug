@@ -142,13 +142,6 @@ class CDCGAN_Classifier(object):
                         print('[%d/%d][iter: %d] Loss_D: %.4f Loss_G: %.4f (%.4f/ %.4f) Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
                               % (epoch, n_epochs, iter, errD.item(), errG.item(),errG_D.item(), errG_C.item(), errC.item(), D_X, D_G))
 
-                    if iter % 100 == 0:
-                        vutils.save_image(real_image[:64],
-                                          '%s/images/real_samples.png' % opt.outf,
-                                          normalize=True)
-                        vutils.save_image(fake.data[:64],
-                                          '%s/images/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
-                                          normalize=True)
 
             self.D_scheduler.step()
             self.G_scheduler.step()
