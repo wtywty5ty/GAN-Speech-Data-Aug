@@ -10,22 +10,11 @@ import argparse
 import pickle
 import os,time
 import subprocess
+from embedding.train_embedding import embedNet
 from utils import processTriData, triphoneMap
 from models.models_sncgan_classifier_mlp import _netG, _netD, _netC
 plt.switch_backend('agg')
 
-class embedNet(nn.Module):
-    def __init__(self, nclasses):
-        super(embedNet, self).__init__()
-        self.emb = nn.Embedding(nclasses, 20)
-        self.li = nn.Sequential(
-            nn.Linear(20, nclasses),
-        )
-
-    def forward(self, input):
-        output = self.emb(input)
-        output = self.li(output)
-        return output
 
 
 def weight_filler(m):
@@ -58,7 +47,7 @@ class CDCGAN_Classifier(object):
         self.D.apply(weight_filler)
         self.C = classifier(opt.nclass).to(device)
         self.C.apply(weight_filler)
-        self.emb = torch.load('../embedding/out/embedNet.pkl').emb.to(device)
+        self.emb = torch.load('embedding/out/embedNet.pkl').emb.to(device)
 
         # criteria
         self.criteria_DG = nn.BCELoss().to(device)
