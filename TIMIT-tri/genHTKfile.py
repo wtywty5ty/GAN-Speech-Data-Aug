@@ -2,7 +2,7 @@ import torch
 import struct
 import numpy
 import os
-from utils import triphoneMap
+from utils.ProcessRawData import *
 
 
 class genHTKfile(object):
@@ -17,7 +17,7 @@ class genHTKfile(object):
         self.phone = phone
         self.ID = ID
         G_PATH = 'outf/GAN_array/%s/netG_.pkl'%phone
-        self.generator = torch.load(G_PATH).eval()
+        self.generator = torch.load(G_PATH, map_location=lambda storage, loc: storage).cuda().eval()
         self.phoneMap = triphoneMap('slist.txt', phone)
         if self.mode == 'equal_phone':
             self.nSamples = 18000 - 18000 % self.phoneMap.nlabels()
@@ -62,14 +62,16 @@ class genHTKfile(object):
         print('Appending scp file successfully')
 
     def appendmlf(self):
+        smap = statemap('states.map')
         if not os.path.exists('HTKFILE/mlabs/gan_%s.mlf'%self.mode):
             with open('HTKFILE/mlabs/gan_%s.mlf'%self.mode, 'w') as f:
                 f.write('#!MLF!#\n')
         with open('HTKFILE/mlabs/gan_%s.mlf'%self.mode, 'a') as f:
             f.write('"%s_gan_%d_%s.lab"\n'% (self.phone, self.ID, self.mode))
             for id in range(self.phoneMap.nlabels()):
+                vstate = smap[self.phoneMap.f2states[id]]
                 f.write('%d %d %s\n'% (id*self.splitSize*self.sampPeriod,
-                                     (id+1)*self.splitSize*self.sampPeriod, self.phoneMap.f2states[id]))
+                                     (id+1)*self.splitSize*self.sampPeriod, vstate))
 
             f.write('.\n')
             print('Appending mlf file successfully')

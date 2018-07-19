@@ -184,5 +184,7 @@ def statemap(map):
             temp = temp.split(' ')
             if temp[1] not in sdict:
                 sdict[temp[1]] = temp[0]
-
+    sdict['sil_s2'] = 'sil[2]'
+    sdict['sil_s3'] = 'sil[3]'
+    sdict['sil_s4'] = 'sil[4]'
     return sdict
