@@ -58,7 +58,7 @@ class genHTKfile(object):
         with open('HTKFILE/flists/gan_%s.scp'%self.mode, 'a') as f:
             f.write('%s_gan_%d_%s.fbk' % (self.phone, self.ID, self.mode)
                     + '=/home/ty/tw472/master/FH5_w16d40_tri/HTKFILE/fbk/%s_gan_%d_%s.fbk' % (self.phone, self.ID, self.mode)
-                    + '[0, %d]\n'%(self.nSamples-1))
+                    + '[0,%d]\n'%(self.nSamples-1))
         print('Appending scp file successfully')
 
     def appendmlf(self):

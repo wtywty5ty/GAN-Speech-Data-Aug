@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="86ca6928-9d60-48ba-b075-39d0eeb2401a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/TestData.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/__init__.py" />
+    <list default="true" id="86ca6928-9d60-48ba-b075-39d0eeb2401a" name="Default" comment="fix bugs">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_singleGAN.py" afterPath="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_singleGAN.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" afterPath="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/utils.py" afterPath="$PROJECT_DIR$/TIMIT-tri/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,14 +16,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="genHTKfile.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="417">
+              <caret line="73" column="26" lean-forward="true" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+                <marker date="1532026590439" expanded="true" signature="3637:3657" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="-362">
               <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1532005064571" expanded="true" signature="5291:5534" ph="..." />
+                <marker date="1532018728734" expanded="true" signature="5291:5534" ph="..." />
               </folding>
             </state>
           </provider>
@@ -43,10 +54,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_sn_classifier_singleGAN.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="train_sn_classifier_singleGAN.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_singleGAN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
+            <state relative-caret-position="2475">
               <caret line="165" column="24" lean-forward="true" selection-start-line="165" selection-start-column="24" selection-end-line="165" selection-end-column="24" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -58,11 +69,21 @@
       <file leaf-file-name="ProcessRawData.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="701">
-              <caret line="92" column="32" lean-forward="true" selection-start-line="92" selection-start-column="32" selection-end-line="92" selection-end-column="32" />
+            <state relative-caret-position="433">
+              <caret line="187" column="16" lean-forward="true" selection-start-line="187" selection-start-column="16" selection-end-line="187" selection-end-column="16" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="temp.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/temp.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -132,13 +153,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Embedding/train_embedding.py" />
-        <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils/TestData.py" />
-        <option value="$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_singleGAN.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/temp.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" />
       </list>
     </option>
   </component>
@@ -182,18 +204,7 @@
             <path>
               <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
               <item name="GAN-Speech-Data-Aug" type="462c0819:PsiDirectoryNode" />
-              <item name="mnist-test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GAN-Speech-Data-Aug" type="462c0819:PsiDirectoryNode" />
               <item name="TIMIT-tri" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GAN-Speech-Data-Aug" type="462c0819:PsiDirectoryNode" />
-              <item name="TIMIT-tri" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
@@ -276,7 +287,14 @@
       <option name="project" value="LOCAL" />
       <updated>1531674361825</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update single GAN and utils">
+      <created>1532008724399</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1532008724402</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -311,7 +329,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update embedding" />
-    <option name="LAST_COMMIT_MESSAGE" value="update embedding" />
+    <MESSAGE value="update single GAN and utils" />
+    <MESSAGE value="fix bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -325,8 +345,8 @@
         <state relative-caret-position="960">
           <caret line="68" column="37" lean-forward="false" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
           <folding>
-            <element signature="e#0#12#0" expanded="false" />
-            <marker date="1532005064565" expanded="true" signature="3638:3658" ph="..." />
+            <element signature="e#0#12#0" expanded="true" />
+            <marker date="1532026590439" expanded="true" signature="3637:3657" ph="..." />
           </folding>
         </state>
       </provider>
@@ -375,7 +395,7 @@
           <caret line="178" column="0" lean-forward="false" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1532005064571" expanded="true" signature="5291:5534" ph="..." />
+            <marker date="1532018728734" expanded="true" signature="5291:5534" ph="..." />
           </folding>
         </state>
       </provider>
@@ -425,8 +445,8 @@
         <state relative-caret-position="1185">
           <caret line="83" column="20" lean-forward="false" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
           <folding>
-            <element signature="e#0#12#0" expanded="false" />
-            <marker date="1532005064565" expanded="true" signature="3638:3658" ph="..." />
+            <element signature="e#0#12#0" expanded="true" />
+            <marker date="1532026590439" expanded="true" signature="3637:3657" ph="..." />
           </folding>
         </state>
       </provider>
@@ -467,7 +487,7 @@
           <caret line="178" column="0" lean-forward="false" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1532005064571" expanded="true" signature="5291:5534" ph="..." />
+            <marker date="1532018728734" expanded="true" signature="5291:5534" ph="..." />
           </folding>
         </state>
       </provider>
@@ -525,8 +545,8 @@
         <state relative-caret-position="210">
           <caret line="14" column="4" lean-forward="false" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
           <folding>
-            <element signature="e#0#12#0" expanded="false" />
-            <marker date="1532005064565" expanded="true" signature="3638:3658" ph="..." />
+            <element signature="e#0#12#0" expanded="true" />
+            <marker date="1532026590439" expanded="true" signature="3637:3657" ph="..." />
           </folding>
         </state>
       </provider>
@@ -578,17 +598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="65" column="37" lean-forward="false" selection-start-line="65" selection-start-column="37" selection-end-line="65" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#12#0" expanded="false" />
-            <marker date="1532005064565" expanded="true" signature="3638:3658" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_embed.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3165">
@@ -635,16 +644,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="6" column="34" lean-forward="true" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -663,32 +662,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <marker date="1532005064571" expanded="true" signature="5291:5534" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="317">
           <caret line="172" column="12" lean-forward="true" selection-start-line="172" selection-start-column="12" selection-end-line="176" selection-end-column="51" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="701">
-          <caret line="92" column="32" lean-forward="true" selection-start-line="92" selection-start-column="32" selection-end-line="92" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -700,12 +678,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="6" column="34" lean-forward="true" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_singleGAN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
+        <state relative-caret-position="2475">
           <caret line="165" column="24" lean-forward="true" selection-start-line="165" selection-start-column="24" selection-end-line="165" selection-end-column="24" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="187" column="16" lean-forward="true" selection-start-line="187" selection-start-column="16" selection-end-line="187" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-362">
+          <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <marker date="1532018728734" expanded="true" signature="5291:5534" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/temp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="73" column="26" lean-forward="true" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+            <marker date="1532026590439" expanded="true" signature="3637:3657" ph="..." />
           </folding>
         </state>
       </provider>

@@ -174,3 +174,15 @@ class triphoneMap(object):
     def state2label(self, phonestate):
         # return fake label of the input triphone states
         return self.t2f[self.states[phonestate]]
+
+
+def statemap(map):
+    sdict = {}
+    with open(map, 'r') as f:
+        for line in f.readlines():
+            temp = line.strip('\n')
+            temp = temp.split(' ')
+            if temp[1] not in sdict:
+                sdict[temp[1]] = temp[0]
+
+    return sdict
