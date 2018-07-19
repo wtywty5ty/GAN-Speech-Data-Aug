@@ -10,8 +10,8 @@ import argparse
 import pickle
 import os,time
 import subprocess
-from utils import *
-from models.models_sncgan_classifier_embed import _netG, _netD, _netC
+from utils.ProcessRawData import *
+from models.models_sncgan_classifier_mlp import _netG, _netD, _netC
 plt.switch_backend('agg')
 
 
@@ -24,6 +24,9 @@ def weight_filler(m):
         m.bias.data.fill_(0)
 
 
+def concat(z,y):
+    return torch.cat([z, y], 1)
+
 
 class CDCGAN_Classifier(object):
     def __init__(self, generator, discriminator, classifier, opt, device):
@@ -35,9 +38,14 @@ class CDCGAN_Classifier(object):
         self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune.cfg -S %s/lib/flists/train.scp -l LABEL -I %s/train.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
         DIR, DIR, DIR, DIR, DIR, DIR, DIR, DIR)
 
-        embed_dim = 50
+        onehot = torch.zeros(opt.nclass, opt.nclass)
+        v = []
+        for i in range(opt.nclass):
+            v.append(i)
+        self.onehot = onehot.scatter_(1, torch.LongTensor(v).view(opt.nclass, 1), 1).to(device)
+
         # nets
-        self.G = generator(opt.nz, opt.nclass, embed_dim).to(device)
+        self.G = generator(opt.nz, opt.nclass).to(device)
         self.G.apply(weight_filler)
         self.D = discriminator().to(device)
         self.D.apply(weight_filler)
@@ -60,6 +68,7 @@ class CDCGAN_Classifier(object):
         train_hist = {}
         train_hist['D_losses'] = []
         train_hist['G_losses'] = []
+        train_hist['C_losses'] = []
         train_hist['per_epoch_ptimes'] = []
         train_hist['total_ptime'] = []
 
@@ -96,8 +105,9 @@ class CDCGAN_Classifier(object):
                     # train with fake
                     noise = real_image.new_zeros(batch_size, opt.nz).normal_(0, 1)
                     y_ = (torch.rand(batch_size, 1) * opt.nclass).type(torch.LongTensor).squeeze().to(device)
+                    y_fake_ = self.onehot[y_]
 
-                    fake = self.G(noise, y_)
+                    fake = self.G(concat(noise, y_fake_))
                     label_fake = torch.zeros_like(label_real)
                     outputD_fake = self.D(fake.detach())
                     errD_fake = self.criteria_DG(outputD_fake, label_fake)
@@ -131,6 +141,7 @@ class CDCGAN_Classifier(object):
 
                         train_hist['D_losses'].append(errD.item())
                         train_hist['G_losses'].append(errG.item())
+                        train_hist['C_losses'].append(errC.item())
 
                     if iter % 20 == 0:
                         print('[%d/%d][iter: %d] Loss_D: %.4f Loss_G: %.4f (%.4f/ %.4f) Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
@@ -157,6 +168,13 @@ class CDCGAN_Classifier(object):
             plt.xlabel('Iterations')
             plt.ylabel('Generator\'s loss')
             plt.savefig('%s/g_loss.png' % opt.outf)
+
+            plt.figure()
+            plt.plot(train_hist['C_losses'])
+            plt.xlabel('Iterations')
+            plt.ylabel('Classifier\'s loss')
+            plt.savefig('%s/c_loss.png' % opt.outf)
+
             plt.close('all')
             # do checkpointing
             if epoch % 10 == 0:
@@ -185,7 +203,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--nclass', type=int, default=808, help='number of classes')
-    parser.add_argument('--batchsize', type=int, default=256, help='training batch size')
+    parser.add_argument('--batchsize', type=int, default=512, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
     parser.add_argument('--outf', default='outf/sn_classifier/log_singleGAN', help="path to output files)")
     opt = parser.parse_args()
