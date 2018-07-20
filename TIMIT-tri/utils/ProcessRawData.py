@@ -188,3 +188,38 @@ def statemap(map):
     sdict['sil_s3'] = 'sil[3]'
     sdict['sil_s4'] = 'sil[4]'
     return sdict
+
+
+def computeprior(s):
+    # For single GAN or Embedding system
+    last_batch = False
+    priorlist = {}
+    quantity = 0
+    while not last_batch:
+        l = s.stdout.read(4)
+        l = struct.unpack("i", l)
+        l = l[0]
+        label = s.stdout.read(l * 4)
+        label = struct.unpack("%di" % l, label)
+        size = s.stdout.read(8)
+        size = struct.unpack("ii", size)
+        data_size = size[0] * size[1]
+        data = s.stdout.read(data_size * 4)
+        data = struct.unpack("%df" % data_size, data)
+        if size[0] < 1024:
+            s.stdout.readline()
+            s.stdout.readline()
+            last_batch = True
+
+        quantity += size[0]
+        for lab in label:
+            if lab not in priorlist:
+                priorlist[lab] = 1
+            else:
+                priorlist[lab] += 1
+
+
+    for key in priorlist.keys():
+        priorlist[key] /= quantity
+
+    return priorlist

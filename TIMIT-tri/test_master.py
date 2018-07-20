@@ -3,17 +3,20 @@ import os
 import torch
 import subprocess
 import matplotlib.pyplot as plt
-from utils import * 
+from utils.ProcessRawData import *
+from utils.GenerateData import *
+from utils.TestData import *
 
 
 plt.switch_backend('agg')
 parser = argparse.ArgumentParser()
 parser.add_argument('--phone', default='aa', help="phone")
 parser.add_argument('--batchsize', type=int, default=1000, help="Batch size")
-parser.add_argument('--G', default='outf/GAN_array/aa/netG_.pkl', help="path to generator (to continue training)")
+parser.add_argument('--G', default='outf/singleGAN/netG_.pkl', help="path to generator (to continue training)")
 parser.add_argument('--uncon', action='store_true', help='enables uncon mode')
 parser.add_argument('--embd', action='store_true', help='enables embd mode')
-parser.add_argument('--evaluation', default='evaluation/GAN_array', help="path to output files)")
+parser.add_argument('--single', action='store_true', help='enables single mode')
+parser.add_argument('--evaluation', default='evaluation/singleGAN', help="path to output files)")
 opt = parser.parse_args()
 print(opt)
 
@@ -31,7 +34,12 @@ HTKcmd = '%s/HNForward -C %s/basic.cfg -C %s/eval.cfg -H %s/hmm0/MMF %s/hmms.mli
 s = subprocess.Popen(HTKcmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
 
 for key in phonemap.states.keys():
-    class_id = phonemap.state2label(key)
+    if opt.single:
+        class_id = phonemap.states[key]
+        nclass = 808
+    else:
+        class_id = phonemap.state2label(key)
+
     if opt.uncon:
         buf = generateDataUncon(generator, opt.batchsize)
     elif opt.embd:
