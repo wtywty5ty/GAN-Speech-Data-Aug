@@ -5,12 +5,14 @@ import os
 from utils.ProcessRawData import *
 
 
+
+
 class genHTKfile(object):
     def __init__(self, phone, ID):
-        self.mode = 'equal_phone'  # almost fixed file size
+        #self.mode = 'equal_phone'  # almost fixed file size
+        self.mode = 'prior'
         # 'equal_state' mode: non fixed file length. Fixed split size instead
         # 'prior'
-        self.nSamples = 18000
         self.sampPeriod = 100000
         self.sampSize = 2080
         self.parmKind = 9 + 0o004000
@@ -22,13 +24,31 @@ class genHTKfile(object):
         if self.mode == 'equal_phone':
             self.nSamples = 18000 - 18000 % self.phoneMap.nlabels()
             self.splitSize = self.nSamples//self.phoneMap.nlabels()
+        elif self.mode == 'prior':
+            self.splitSize = {}
+            self.nSamples = 0
+            prior = {}
+            with open('prior.txt', 'r') as f:
+                for line in f.readlines():
+                    state = int(line.split(' ')[0])
+                    pr = float(line.split(' ')[1].strip('\n'))
+                    prior[state] = pr
+            totalsamp = 864000 # 3min x 48
+            for key in self.phoneMap.states.keys():
+                self.splitSize[self.phoneMap.state2label(key)] = int(totalsamp*prior[self.phoneMap.states[key]])
+                self.nSamples += self.splitSize[self.phoneMap.state2label(key)]
+
 
     def genSamples(self):
         phoneMap = self.phoneMap
         nclass = phoneMap.nlabels()
-        splitSize = self.splitSize
+        splitSizeSet = self.splitSize
         print('Start generating %s samples:'%self.phone)
         for id in range(nclass):
+            if self.mode == 'prior':
+                splitSize = splitSizeSet[id]
+            else:
+                splitSize = splitSizeSet
             noise = torch.randn(splitSize, 100).cuda()
             y = torch.zeros(splitSize, nclass).cuda()
             y[:, id] = 1
@@ -42,9 +62,9 @@ class genHTKfile(object):
                 body = body_
             else:
                 body = body + body_
-            print('..'+str(id), end="")
+            #print('..'+str(id), end="")
 
-        print('..finish!')
+        #print('..finish!')
         return body
 
     def genfbk(self):
@@ -63,6 +83,7 @@ class genHTKfile(object):
 
     def appendmlf(self):
         smap = statemap('states.map')
+        splitSizeSet = self.splitSize
         if not os.path.exists('HTKFILE/mlabs/gan_%s.mlf'%self.mode):
             with open('HTKFILE/mlabs/gan_%s.mlf'%self.mode, 'w') as f:
                 f.write('#!MLF!#\n')
@@ -70,8 +91,18 @@ class genHTKfile(object):
             f.write('"%s_gan_%d_%s.lab"\n'% (self.phone, self.ID, self.mode))
             for id in range(self.phoneMap.nlabels()):
                 vstate = smap[self.phoneMap.f2states[id]]
-                f.write('%d %d %s\n'% (id*self.splitSize*self.sampPeriod,
-                                     (id+1)*self.splitSize*self.sampPeriod, vstate))
+                if self.mode == 'prior':
+                    splitSize = splitSizeSet[id]
+                else:
+                    splitSize = splitSizeSet
+                if id == 0:
+                    start =0
+                    end = start + splitSize*self.sampPeriod
+                else:
+                    start = end
+                    end = start + splitSize*self.sampPeriod
+
+                f.write('%d %d %s\n'% (start, end, vstate))
 
             f.write('.\n')
             print('Appending mlf file successfully')

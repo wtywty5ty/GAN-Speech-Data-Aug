@@ -5,19 +5,21 @@ import subprocess
 import struct
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import * 
+from utils.ProcessRawData import *
+from utils.GenerateData import *
+from utils.TestData import *
 
 
 plt.switch_backend('agg')
 parser = argparse.ArgumentParser()
-parser.add_argument('--phone', default='m', help="phone")
-parser.add_argument('--phoneID', type = int, default=11, help='phone level ID')
-parser.add_argument('--tstate', default='m_s2_1', help=" the state of output phone")
+parser.add_argument('--phone', default='aa', help="phone")
+parser.add_argument('--phoneID', type = int, default=16, help='phone level ID')
+parser.add_argument('--tstate', default='aa_s2_1', help=" the state of output phone")
 parser.add_argument('--batchsize', type=int, default=1000, help="Batch size")
-parser.add_argument('--G', default='outf/sn_classifier/log_m_mlp_cc1e-2/netG_.pkl', help="path to generator (to continue training)")
+parser.add_argument('--G', default='outf/GAN_array/aa/netG_.pkl', help="path to generator (to continue training)")
 parser.add_argument('--uncon', action='store_true', help='enables uncon mode')
 parser.add_argument('--embd', action='store_true', help='enables embd mode')
-parser.add_argument('--evaluation', default='evaluation/con-classifier-mlp-cc1e-2', help="path to output files)")
+parser.add_argument('--evaluation', default='evaluation/GANarray', help="path to output files)")
 opt = parser.parse_args()
 print(opt)
 
@@ -70,7 +72,7 @@ top10 = mean_list.argsort()[-10:][::-1]
 plt.figure()
 N = 10
 ind = np.arange(N)
-plt.bar(ind, mean_list[top10])
+plt.bar(ind, mean_list[top10], yerr=std_list[top10])
 plt.ylabel('Confidence Score', fontsize=13)
 plt.xlabel('Phone', fontsize=13)
 _phone_list = []
