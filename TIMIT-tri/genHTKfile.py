@@ -1,5 +1,6 @@
 import torch
 import struct
+import subprocess
 import numpy
 import os
 from utils.ProcessRawData import *
@@ -43,19 +44,33 @@ class genHTKfile(object):
         phoneMap = self.phoneMap
         nclass = phoneMap.nlabels()
         splitSizeSet = self.splitSize
+        DIR = '/home/ty/tw472/triphone/FH7/dnntrain'
+        HTKcmd = '%s/HNForward -C %s/basic.cfg -C %s/eval.cfg -H %s/hmm0/MMF %s/hmms.mlist' % (DIR, DIR, DIR, DIR, DIR)
+        s = subprocess.Popen(HTKcmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         print('Start generating %s samples:'%self.phone)
         for id in range(nclass):
             if self.mode == 'prior':
                 splitSize = splitSizeSet[id]
             else:
                 splitSize = splitSizeSet
-            noise = torch.randn(splitSize, 100).cuda()
-            y = torch.zeros(splitSize, nclass).cuda()
-            y[:, id] = 1
-            gen_data = self.generator(torch.cat([noise, y], 1)).squeeze()
-            gen_data = gen_data[:, :13, :]
-            gen_data = 3 * gen_data
-
+            while size < splitSize:
+                noise = torch.randn(2000, 100).cuda()
+                y = torch.zeros(2000, nclass).cuda()
+                y[:, id] = 1
+                gen_data = self.generator(torch.cat([noise, y], 1)).squeeze()
+                gen_data = gen_data[:, :13, :]
+                gen_data = 3 * gen_data
+            """
+            while size < splitsize:
+                gen_data
+                gen_data.filter
+                samples = gen_data.cpu().view(-1).detach().numpy()
+                body_ = samples.astype('>f').tostring()
+                if id == 0:
+                    body = body_
+                else:
+                    body = body + body_
+            """
             samples = gen_data.cpu().view(-1).detach().numpy()
             body_ = samples.astype('>f').tostring()
             if id == 0:

@@ -39,7 +39,7 @@ if opt.uncon:
 elif opt.embd:
     buf = generateDataEmbd(generator, opt.batchsize, class_id)
 else:
-    buf = generateData(generator, opt.batchsize, nclass, class_id)
+    buf, _ = generateData(generator, opt.batchsize, nclass, class_id)
 
 DIR = '/home/ty/tw472/triphone/FH7/dnntrain'
 HTKcmd = '%s/HNForward -C %s/basic.cfg -C %s/eval.cfg -H %s/hmm0/MMF %s/hmms.mlist'%(DIR,DIR,DIR,DIR,DIR)

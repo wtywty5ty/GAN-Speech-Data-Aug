@@ -12,11 +12,11 @@ plt.switch_backend('agg')
 parser = argparse.ArgumentParser()
 parser.add_argument('--phone', default='aa', help="phone")
 parser.add_argument('--batchsize', type=int, default=1000, help="Batch size")
-parser.add_argument('--G', default='outf/singleGAN/netG_.pkl', help="path to generator (to continue training)")
+parser.add_argument('--G', default='outf/GAN_array/aa/netG_.pkl', help="path to generator (to continue training)")
 parser.add_argument('--uncon', action='store_true', help='enables uncon mode')
 parser.add_argument('--embd', action='store_true', help='enables embd mode')
 parser.add_argument('--single', action='store_true', help='enables single mode')
-parser.add_argument('--evaluation', default='evaluation/singleGAN', help="path to output files)")
+parser.add_argument('--evaluation', default='evaluation/GAN_array', help="path to output files)")
 opt = parser.parse_args()
 print(opt)
 
@@ -45,7 +45,7 @@ for key in phonemap.states.keys():
     elif opt.embd:
         buf = generateDataEmbd(generator, opt.batchsize, class_id)
     else:
-        buf = generateData(generator, opt.batchsize, nclass, class_id)
+        buf, _ = generateData(generator, opt.batchsize, nclass, class_id)
     s.stdin.write(buf)
     s.stdin.flush()
     row, column, results = testResults(s)

@@ -13,11 +13,14 @@ def generateData(generator, batchsize, nclass, class_id):
     rows = gen_data.size(0)
     columns = gen_data.size(1) * gen_data.size(2)
 
-    flat_data = gen_data.view(-1)
+    flat_data = gen_data.cpu().view(-1).detach().numpy()
+    body = flat_data.astype('f').tostring()
 
-    buf = struct.pack('2i%df' % len(flat_data), rows, columns, *flat_data)
+    header = struct.pack('2i', rows, columns)
 
-    return buf
+    #buf = struct.pack('2i%df' % len(flat_data), rows, columns, *flat_data)
+
+    return header+body, gen_data
 
 
 def generateDataEmbd(generator, batchsize, class_id):
@@ -105,3 +108,5 @@ def generateDataUncon(generator, batchsize):
     buf = struct.pack('2i%sf' % len(flat_data), rows, columns, *flat_data)
 
     return buf
+
+
