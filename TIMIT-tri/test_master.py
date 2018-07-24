@@ -25,7 +25,7 @@ os.makedirs(opt.evaluation, exist_ok=True)
 if opt.G == '':
     raise IOError('Please enter the correct location')
 
-generator = torch.load(opt.G).eval()
+generator = torch.load(opt.G, map_location=lambda storage, loc: storage).cuda().eval()
 phonemap = triphoneMap('slist.txt', opt.phone)
 nclass = phonemap.nlabels()
 
