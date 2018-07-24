@@ -146,6 +146,7 @@ class triphoneMap(object):
         dict1 = {}
         dict2 = {}
         dict3 = {}
+        dict4 = {}
         i = 0
         with open(slist, 'r') as f:
             for line in f.readlines():
@@ -156,11 +157,13 @@ class triphoneMap(object):
                     dict1[line.split(' ')[0]] = trueID
                     dict2[trueID] = fakeID
                     dict3[fakeID] = line.split(' ')[0]
+                    dict4[fakeID] = trueID
                     i += 1
         self.id2states = dict0
         self.states = dict1
         self.t2f = dict2
         self.f2states = dict3
+        self.f2t = dict4
 
     def labeltrans(self, truelabel):
         # transform actual label to new ordered label

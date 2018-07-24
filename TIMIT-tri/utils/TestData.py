@@ -1,5 +1,6 @@
 import struct
 import numpy as np
+from ProcessRawData import triphoneMap
 
 
 def testResults(s):
@@ -13,6 +14,35 @@ def testResults(s):
         results = struct.unpack('%df'% columns, results)
         results_list.append(results)
     return rows, columns, results_list
+
+def dataFilter(s, id):
+    rows = s.stdout.read(4)
+    rows = struct.unpack('i', rows)[0]
+    columns = s.stdout.read(4)
+    columns = struct.unpack('i', columns)[0]
+    idx_list = []
+    for i in range(rows):
+        results = s.stdout.read(columns*4)
+        results = struct.unpack('%df' % columns, results)
+        if results.index(max(results)) != id:
+            idx_list.append(i)
+    return idx_list
+
+def dataFilterPlevel(s, id, phonemap):
+    state = phonemap.id2sates[id]
+    phone = state.split('_')
+    rows = s.stdout.read(4)
+    rows = struct.unpack('i', rows)[0]
+    columns = s.stdout.read(4)
+    columns = struct.unpack('i', columns)[0]
+    idx_list = []
+    for i in range(rows):
+        results = s.stdout.read(columns * 4)
+        results = struct.unpack('%df' % columns, results)
+        if results.index(max(results)) != id:
+            idx_list.append(i)
+    return idx_list
+
 
 
 def returnMeanStd(results_list):

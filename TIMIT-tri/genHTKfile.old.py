@@ -11,8 +11,8 @@ from utils.TestData import *
 
 class genHTKfile(object):
     def __init__(self, phone, ID):
-        #self.mode = 'prior'  # almost fixed file size
-        self.mode = 'uniform_rej'
+        #self.mode = 'equal_phone'  # almost fixed file size
+        self.mode = 'uniform_rej_0.5'
         # 'prior'
         self.sampPeriod = 100000
         self.sampSize = 2080
@@ -22,10 +22,9 @@ class genHTKfile(object):
         G_PATH = 'outf/GAN_array/%s/netG_.pkl'%phone
         self.generator = torch.load(G_PATH, map_location=lambda storage, loc: storage).cuda().eval()
         self.phoneMap = triphoneMap('slist.txt', phone)
-        if self.mode.split('_')[0] == 'uniform':
-            self.nSamples = 6000 - 6000 % self.phoneMap.nlabels()
+        if self.mode == 'equal_phone':
+            self.nSamples = 18000 - 18000 % self.phoneMap.nlabels()
             self.splitSize = self.nSamples//self.phoneMap.nlabels()
-        """
         elif self.mode.split('_')[0] == 'prior':
             self.splitSize = {}
             self.nSamples = 0
@@ -39,7 +38,6 @@ class genHTKfile(object):
             for fid in range(self.phoneMap.nlabels()):
                 self.splitSize[fid] = int(totalsamp*prior[self.phoneMap.f2t[fid]])
                 self.nSamples += self.splitSize[fid]
-        """
 
 
     def genSamples(self):
@@ -57,42 +55,39 @@ class genHTKfile(object):
             else:
                 splitSize = splitSizeSet
 
-            if self.mode.split('_')[1] == 'rej':
-                buf, data = generateData(self.generator, splitSize, nclass, id)
-                s.stdin.write(buf)
-                s.stdin.flush()
-                tid = phoneMap.f2t[id]
-                index = dataFilter(s, tid)
-                data = data[:, :13, :]
-                data_f = data[index]
 
-                while data_f.size(0) < splitSize:
-                    buf, data = generateData(self.generator, splitSize, nclass, id)
-                    s.stdin.write(buf)
-                    s.stdin.flush()
-                    tid = phoneMap.f2t[id]
-                    index = dataFilter(s, tid)
-                    data = data[:, :13, :]
-                    data_f_ = data[index]
-                    data_f = torch.cat([data_f, data_f_], 0)
+            size = int(splitSize * 5)
+            buf, data = generateData(self.generator, size, nclass, id)
+            s.stdin.write(buf)
+            s.stdin.flush()
+            tid = phoneMap.f2t[id]
+            index = dataFilter(s, tid, splitSize)
+            data = data[:, :13, :]
+            data_low = data[index]
+            samples = data_low.cpu().view(-1).detach().numpy()
+            body_ = samples.astype('>f').tostring()
+            binary = binary + body_
 
-                data_f = data_f[:splitSize]
 
-                flat_data = data_f.cpu().view(-1).detach().numpy()
-                body_ = flat_data.astype('>f').tostring()
-                binary = binary + body_
-
-            else:
-                noise = torch.randn(splitSize, 100).cuda()
-                y = torch.zeros(splitSize, nclass).cuda()
-                y[:, id] = 1
-                gen_data = self.generator(torch.cat([noise, y], 1)).squeeze()
-                gen_data = gen_data[:, :13, :]
-                gen_data = 3 * gen_data
+            """
+            noise = torch.randn(2000, 100).cuda()
+            y = torch.zeros(2000, nclass).cuda()
+            y[:, id] = 1
+            gen_data = self.generator(torch.cat([noise, y], 1)).squeeze()
+            gen_data = gen_data[:, :13, :]
+            gen_data = 3 * gen_data
+            """
+            """
+            while size < splitsize:
+                gen_data
+                gen_data.filter
                 samples = gen_data.cpu().view(-1).detach().numpy()
                 body_ = samples.astype('>f').tostring()
-                binary = binary + body_
-
+                if id == 0:
+                    body = body_
+                else:
+                    body = body + body_
+            """
             print('..'+str(id), end="")
         print('..finish!')
         end = struct.pack('i', 0)
@@ -144,10 +139,10 @@ if __name__ == '__main__':
     phone_list1 = ['b', 'd', 'f', 'g', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't']
     phone_list2 = ['v', 'w', 'y', 'z', 'aa', 'ae', 'ah', 'ao', 'aw', 'ax', 'ay', 'ch']
     phone_list3 = ['cl', 'dh', 'dx', 'eh', 'el', 'en', 'er', 'ey', 'hh', 'ih', 'ix', 'iy']
-    phone_list4 = ['jh', 'ng', 'ow', 'oy', 'sh', 'th', 'uh', 'uw', 'zh', 'epi', 'sil', 'vcl']
+    phone_list4 = ['jh', 'ng', 'ow', 'oy', 'sh', 'th', 'uh', 'uw', 'zh', 'epi', 'vcl']
     phone_list = phone_list1 + phone_list2 + phone_list3 + phone_list4
-    for phone in phone_list:
-        for ID in range(4):
+    for phone in ['sil']:
+        for ID in range(80):
             task = genHTKfile(phone, ID)
             task.genfbk()
             task.appendscp()
