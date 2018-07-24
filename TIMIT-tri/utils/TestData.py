@@ -1,6 +1,5 @@
 import struct
 import numpy as np
-from ProcessRawData import triphoneMap
 
 
 def testResults(s):
@@ -30,7 +29,7 @@ def dataFilter(s, id):
 
 def dataFilterPlevel(s, id, phonemap):
     state = phonemap.id2sates[id]
-    phone = state.split('_')
+    targetphone = state.split('_')[0]
     rows = s.stdout.read(4)
     rows = struct.unpack('i', rows)[0]
     columns = s.stdout.read(4)
@@ -39,7 +38,8 @@ def dataFilterPlevel(s, id, phonemap):
     for i in range(rows):
         results = s.stdout.read(columns * 4)
         results = struct.unpack('%df' % columns, results)
-        if results.index(max(results)) != id:
+        cls = results.index(max(results))
+        if phonemap.id2sates[cls].split('_')[0] != targetphone:
             idx_list.append(i)
     return idx_list
 
