@@ -20,7 +20,8 @@ class genHTKfile(object):
         self.phone = phone
         self.ID = ID
         G_PATH = 'outf/GAN_array/%s/netG_.pkl'%phone
-        self.generator = torch.load(G_PATH, map_location=lambda storage, loc: storage).cuda().eval()
+        generator = torch.load(G_PATH, map_location=lambda storage, loc: storage).cuda().eval()
+        self.generator = generator
         self.phoneMap = triphoneMap('slist.txt', phone)
         if self.mode.split('_')[0] == 'uniform':
             self.nSamples = 6000 - 6000 % self.phoneMap.nlabels()
@@ -57,7 +58,7 @@ class genHTKfile(object):
             else:
                 splitSize = splitSizeSet
 
-            if self.mode.split('_')[1] == 'rej':
+            if self.mode.split('_')[1] != 'rej':
                 buf, data = generateData(self.generator, splitSize, nclass, id)
                 s.stdin.write(buf)
                 s.stdin.flush()
@@ -72,7 +73,7 @@ class genHTKfile(object):
                     s.stdin.flush()
                     tid = phoneMap.f2t[id]
                     index = dataFilter(s, tid)
-                    data = data[:, :13, :]
+                    data = data[:, :13, :].detach()
                     data_f_ = data[index]
                     data_f = torch.cat([data_f, data_f_], 0)
 
@@ -146,7 +147,7 @@ if __name__ == '__main__':
     phone_list3 = ['cl', 'dh', 'dx', 'eh', 'el', 'en', 'er', 'ey', 'hh', 'ih', 'ix', 'iy']
     phone_list4 = ['jh', 'ng', 'ow', 'oy', 'sh', 'th', 'uh', 'uw', 'zh', 'epi', 'sil', 'vcl']
     phone_list = phone_list1 + phone_list2 + phone_list3 + phone_list4
-    for phone in phone_list:
+    for phone in [ 'sil']:
         for ID in range(4):
             task = genHTKfile(phone, ID)
             task.genfbk()
