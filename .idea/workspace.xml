@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="86ca6928-9d60-48ba-b075-39d0eeb2401a" name="Default" comment="fix bugs">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py" />
+    <list default="true" id="86ca6928-9d60-48ba-b075-39d0eeb2401a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" afterPath="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/models/models_uncon.py" afterPath="$PROJECT_DIR$/TIMIT-tri/models/models_uncon.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/test_phone.py" afterPath="$PROJECT_DIR$/TIMIT-tri/test_phone.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py" afterPath="$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,57 +17,57 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="genHTKfile.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
+      <file leaf-file-name="train_sn_uncon.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-530">
-              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="7" selection-end-column="28" />
+            <state relative-caret-position="-1117">
+              <caret line="82" column="9" lean-forward="true" selection-start-line="82" selection-start-column="9" selection-end-line="82" selection-end-column="9" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_phone.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_phone.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="945">
+              <caret line="72" column="6" lean-forward="true" selection-start-line="72" selection-start-column="6" selection-end-line="72" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_sn_uncon.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py">
+      <file leaf-file-name="test_master.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3045">
-              <caret line="203" column="0" lean-forward="true" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+            <state relative-caret-position="638">
+              <caret line="49" column="19" lean-forward="true" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
               <folding>
-                <element signature="e#0#12#0" expanded="true" />
+                <element signature="e#0#15#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestData.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/TestData.py">
+      <file leaf-file-name="train_master.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="35" column="44" lean-forward="true" selection-start-line="35" selection-start-column="44" selection-end-line="35" selection-end-column="44" />
+            <state relative-caret-position="135">
+              <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding>
-                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#0#11#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_sngan.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mnist-test/train_sngan.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-344">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models_sngan.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mnist-test/models/models_sngan.py">
+      <file leaf-file-name="temp.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/temp.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="525">
-              <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+              <caret line="36" column="27" lean-forward="true" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -83,13 +85,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_master.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_master.py">
+      <file leaf-file-name="GenerateData.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="49" column="19" lean-forward="true" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
+            <state relative-caret-position="563">
+              <caret line="105" column="55" lean-forward="true" selection-start-line="105" selection-start-column="55" selection-end-line="105" selection-end-column="55" />
               <folding>
-                <element signature="e#0#15#0" expanded="true" />
+                <element signature="e#0#13#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -98,7 +100,7 @@
       <file leaf-file-name="train_sn_classifier.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1987">
+            <state relative-caret-position="-819">
               <caret line="56" column="18" lean-forward="true" selection-start-line="56" selection-start-column="18" selection-end-line="56" selection-end-column="18" />
               <folding />
             </state>
@@ -108,8 +110,8 @@
       <file leaf-file-name="models_uncon.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/models/models_uncon.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="40" column="26" lean-forward="true" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
+            <state relative-caret-position="705">
+              <caret line="47" column="21" lean-forward="true" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -117,13 +119,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GenerateData.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
+      <file leaf-file-name="models_sncgan_classifier.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/models/models_sncgan_classifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+            <state relative-caret-position="1650">
+              <caret line="110" column="0" lean-forward="true" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
               <folding>
-                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#0#21#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -155,14 +157,15 @@
         <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_singleGAN.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/temp.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_preC.py" />
-        <option value="$PROJECT_DIR$/TIMIT-tri/test_phone.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/genHTKtools.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils/TestData.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/test_master.py" />
-        <option value="$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/models/models_uncon.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/test_phone.py" />
       </list>
     </option>
   </component>
@@ -206,12 +209,6 @@
               <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
               <item name="GAN-Speech-Data-Aug" type="462c0819:PsiDirectoryNode" />
               <item name="TIMIT-tri" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GAN-Speech-Data-Aug" type="462c0819:PsiDirectoryNode" />
-              <item name="TIMIT-tri" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="GAN-Speech-Data-Aug" type="b2602c69:ProjectViewProjectNode" />
@@ -358,7 +355,14 @@
       <option name="project" value="LOCAL" />
       <updated>1532461163740</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix bugs">
+      <created>1532480453890</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1532480453890</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -404,16 +408,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/ProcessRawData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2640">
-          <caret line="177" column="0" lean-forward="true" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -709,26 +703,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_phone.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-215">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#15#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/temp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="27" lean-forward="true" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
-          <folding>
-            <element signature="e#781#798#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier_preC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="708">
@@ -744,26 +718,6 @@
           <folding>
             <element signature="e#0#12#0" expanded="true" />
             <marker date="1532444341006" expanded="true" signature="5911:5927" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -786,26 +740,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/models/models_uncon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="40" column="26" lean-forward="true" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_master.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="49" column="19" lean-forward="true" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/TestData.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -816,20 +750,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-445">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="7" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/models/models_uncon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" column="21" lean-forward="true" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_classifier.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1987">
+        <state relative-caret-position="-819">
           <caret line="56" column="18" lean-forward="true" selection-start-line="56" selection-start-column="18" selection-end-line="56" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/models/models_sncgan_classifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1650">
+          <caret line="110" column="0" lean-forward="true" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/temp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="36" column="27" lean-forward="true" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3045">
-          <caret line="203" column="0" lean-forward="true" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+        <state relative-caret-position="-1117">
+          <caret line="82" column="9" lean-forward="true" selection-start-line="82" selection-start-column="9" selection-end-line="82" selection-end-column="9" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -844,10 +824,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile.py">
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/utils/GenerateData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-530">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="7" selection-end-column="28" />
+        <state relative-caret-position="563">
+          <caret line="105" column="55" lean-forward="true" selection-start-line="105" selection-start-column="55" selection-end-line="105" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_master.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="49" column="19" lean-forward="true" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_phone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="945">
+          <caret line="72" column="6" lean-forward="true" selection-start-line="72" selection-start-column="6" selection-end-line="72" selection-end-column="6" />
           <folding />
         </state>
       </provider>

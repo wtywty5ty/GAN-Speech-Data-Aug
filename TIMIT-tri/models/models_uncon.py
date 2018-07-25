@@ -6,16 +6,19 @@ from src.snlayers.snconv2d import SNConv2d
 from src.snlayers.snlinear import SNLinear
 
 class _netG(nn.Module):
-    def __init__(self, nz, nc, ngf):
+    def __init__(self, nz):
         super(_netG, self).__init__()
+        nc = 1
+        ngf = 64
         self.ngf = ngf
         self.ini_w = 2
         self.ini_h = 5
-        self.l1 = nn.Sequential(nn.Linear(nz, ngf*8*self.ini_w*self.ini_h),)
+        self.l1 = nn.Sequential(nn.Linear(nz, ngf*8*self.ini_w*self.ini_h),
+                                nn.BatchNorm1d(ngf*8*self.ini_w*self.ini_h),
+                                nn.ReLU(True),
+                                )
 
         self.main = nn.Sequential(
-            nn.BatchNorm2d(ngf * 8),
-            nn.ReLU(True),
             # state size. (ngf*8) x 4 x 4
             nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=True),
             nn.BatchNorm2d(ngf * 4),
@@ -42,8 +45,10 @@ class _netG(nn.Module):
         return output
 
 class _netD(nn.Module):
-    def __init__(self, nc, ndf):
+    def __init__(self):
         super(_netD, self).__init__()
+        nc = 1
+        ndf = 64
         self.ini_w = 2
         self.ini_h = 5
         self.main = nn.Sequential(

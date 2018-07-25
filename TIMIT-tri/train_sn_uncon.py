@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torchvision.utils as vutils
 import torch.utils.data
 import torch.backends.cudnn as cudnn
 import matplotlib.pyplot as plt
@@ -39,7 +38,7 @@ class CDCGAN_Classifier(object):
             DIR, DIR, DIR, opt.gpu_id, DIR, DIR, DIR, DIR, DIR)
 
         # nets
-        self.G = generator(opt.nz, opt.nclass).to(device)
+        self.G = generator(opt.nz).to(device)
         self.G.apply(weight_filler)
         self.D = discriminator().to(device)
         self.D.apply(weight_filler)
@@ -179,7 +178,7 @@ if __name__ == '__main__':
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
-    parser.add_argument('--phone', default='dh', help='phone')
+    parser.add_argument('--phone', default='aa', help='phone')
     parser.add_argument('--outf', default='outf/test', help="path to output files)")
     opt = parser.parse_args()
 

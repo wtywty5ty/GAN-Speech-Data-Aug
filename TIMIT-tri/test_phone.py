@@ -72,7 +72,7 @@ top10 = mean_list.argsort()[-10:][::-1]
 plt.figure()
 N = 10
 ind = np.arange(N)
-plt.bar(ind, mean_list[top10], yerr=std_list[top10])
+plt.bar(ind, mean_list[top10], yerr=std_list)
 plt.ylabel('Confidence Score', fontsize=13)
 plt.xlabel('Phone', fontsize=13)
 _phone_list = []
