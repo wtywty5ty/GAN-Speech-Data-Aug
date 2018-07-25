@@ -148,7 +148,7 @@ class CDCGAN_Classifier(object):
 
             plt.close('all')
             # do checkpointing
-            if (epoch + 1) % 100 == 0:
+            if (epoch + 1) % 15 == 0:
                 torch.save(self.G, '%s/checkpoints/netG_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.D, '%s/checkpoints/netD_epoch_%d.pkl' % (opt.outf, epoch))
 
@@ -187,6 +187,7 @@ if __name__ == '__main__':
     os.makedirs(opt.outf, exist_ok=True)
     os.makedirs('%s/checkpoints' % opt.outf, exist_ok=True)
     #os.makedirs('%s/images' % opt.outf, exist_ok=True)
+
 
     if opt.manualSeed is None:
         opt.manualSeed = random.randint(1, 10000)
