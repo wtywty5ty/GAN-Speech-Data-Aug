@@ -46,7 +46,7 @@ def dataFilterPlevel(s, id, phonemap):
 def genLabel(s, phonemap):
     idx = {}
     splitSize = {}
-    for fid in range(phonemap.nlabels):
+    for fid in range(phonemap.nlabels()):
         idx[fid] = []
 
     rows = s.stdout.read(4)
@@ -56,13 +56,13 @@ def genLabel(s, phonemap):
     for row in range(rows):
         results = s.stdout.read(columns * 4)
         results = struct.unpack('%df' % columns, results)
-        tid_pool = [phonemap.f2t[i] for i in range(phonemap.nlabels)]
+        tid_pool = [phonemap.f2t[i] for i in range(phonemap.nlabels())]
         score_pool = [results[tid] for tid in tid_pool]
         cls_fid = score_pool.index(max(score_pool))
         idx[cls_fid].append(row)
 
     index = []
-    for fid in range(phonemap.nlabels):
+    for fid in range(phonemap.nlabels()):
         index += idx[fid]
         splitSize[fid] = len(idx[fid])
         if splitSize[fid] == 0:

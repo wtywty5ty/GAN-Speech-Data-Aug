@@ -110,6 +110,6 @@ def generateDataUncon(generator, batchsize):
 
     #buf = struct.pack('2i%sf' % len(flat_data), rows, columns, *flat_data)
 
-    return header+body
+    return header+body, gen_data
 
 

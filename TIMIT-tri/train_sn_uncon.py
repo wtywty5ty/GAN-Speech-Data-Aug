@@ -162,8 +162,8 @@ class CDCGAN_Classifier(object):
             epoch_G_avg = np.mean(epoch_G)
             print(str(epoch)+': '+str(epoch_D_avg))
             print(str(epoch)+': '+str(epoch_G_avg))
-            if epoch > 20:
-                if np.abs(epoch_D_avg-_epoch_D_avg)<0.00001 and np.abs(epoch_G_avg-_epoch_G_avg)<0.00001:
+            if epoch >= 20:
+                if np.abs(epoch_D_avg-_epoch_D_avg)<0.0001 and np.abs(epoch_G_avg-_epoch_G_avg)<0.0001:
                     break
 
             _epoch_D_avg = np.mean(epoch_D)
@@ -187,15 +187,15 @@ class CDCGAN_Classifier(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train DCGAN model')
-    parser.add_argument('--n_epochs', type=int, default=80, help='number of epochs of training')
+    parser.add_argument('--n_epochs', type=int, default=100, help='number of epochs of training')
     parser.add_argument('--gpu_id', type=int, default=0, help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
     parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
-    parser.add_argument('--phone', default='ng', help='phone')
-    parser.add_argument('--outf', default='outf/test/ng', help="path to output files)")
+    parser.add_argument('--phone', default='aa', help='phone')
+    parser.add_argument('--outf', default='outf/test/aa', help="path to output files)")
     opt = parser.parse_args()
 
     print(opt)

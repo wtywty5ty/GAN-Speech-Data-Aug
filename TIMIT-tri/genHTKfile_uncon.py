@@ -96,7 +96,7 @@ if __name__ == '__main__':
     phone_list3 = ['cl', 'dh', 'dx', 'eh', 'el', 'en', 'er', 'ey', 'hh', 'ih', 'ix', 'iy']
     phone_list4 = ['jh', 'ng', 'ow', 'oy', 'sh', 'th', 'uh', 'uw', 'zh', 'epi', 'sil', 'vcl']
     phone_list = phone_list1 + phone_list2 + phone_list3 + phone_list4
-    for phone in [ 'sil']:
+    for phone in phone_list:
         for ID in range(4):
             task = genHTKfile(phone, ID)
             task.genfbk()
