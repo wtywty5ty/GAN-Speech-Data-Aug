@@ -70,6 +70,36 @@ def genLabel(s, phonemap):
 
     return index, splitSize
 
+def genLabelFilter(s, phonemap):
+    idx = {}
+    splitSize = {}
+    for fid in range(phonemap.nlabels()):
+        idx[fid] = []
+
+    rows = s.stdout.read(4)
+    rows = struct.unpack('i', rows)[0]
+    columns = s.stdout.read(4)
+    columns = struct.unpack('i', columns)[0]
+    for row in range(rows):
+        results = s.stdout.read(columns * 4)
+        results = struct.unpack('%df' % columns, results)
+        tid_pool = [phonemap.f2t[i] for i in range(phonemap.nlabels())]
+        cls_tid = results.index(max(results))
+        if cls_tid not in tid_pool:
+            continue
+        cls_fid = phonemap.t2f[cls_tid]
+        idx[cls_fid].append(row)
+
+    index = []
+    for fid in range(phonemap.nlabels()):
+        index += idx[fid]
+        splitSize[fid] = len(idx[fid])
+        if splitSize[fid] == 0:
+            print('warning: one state gets 0 sample')
+
+    return index, splitSize
+
+
 def returnMeanStd(results_list):
     mean_list = np.mean(results_list, 0)
     std_list = np.std(results_list, 0)
