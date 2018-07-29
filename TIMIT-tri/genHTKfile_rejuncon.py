@@ -11,7 +11,7 @@ from utils.TestData import *
 
 
 class genHTKfile(object):
-    def __init__(self, phone, ID):
+    def __init__(self, phone):
         self.mode = 'uncon_rejw' #reject wrong samples
         # 'prior'
         self.sampPeriod = 100000
@@ -55,7 +55,7 @@ class genHTKfile(object):
     def genfbk(self):
         totalsamp = 0
         id = 0
-        while totalsamp < 60000:
+        while totalsamp < 48000:
             binary, nSamples, splitSizeSet = self.genSamples()
             with open('HTKFILE/fbk/%s/%s_gan_%d_%s.fbk' % (self.mode, self.phone, id, self.mode), 'wb') as f:
                 f.write(binary)
@@ -68,7 +68,7 @@ class genHTKfile(object):
 
     def appendscp(self, nSamples, ID):
         with open('HTKFILE/flists/gan_%s.scp'%self.mode, 'a') as f:
-            f.write('%s_gan_%d_%s.fbk' % (self.phone, self.ID, self.mode)
+            f.write('%s_gan_%d_%s.fbk' % (self.phone, ID, self.mode)
                     + '=/home/ty/tw472/master/FH5_w16d40_tri/HTKFILE/fbk/%s/%s_gan_%d_%s.fbk' % (self.mode, self.phone, ID, self.mode)
                     + '[0,%d]\n'%(nSamples-1))
         print('Appending scp file successfully')

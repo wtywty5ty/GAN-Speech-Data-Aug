@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86ca6928-9d60-48ba-b075-39d0eeb2401a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TIMIT-tri/temp.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/genHTKfile_uncon.py" afterPath="$PROJECT_DIR$/TIMIT-tri/genHTKfile_uncon.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/utils/TestData.py" afterPath="$PROJECT_DIR$/TIMIT-tri/utils/TestData.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py" afterPath="$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -62,18 +61,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_sn_uncon.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_sn_uncon.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-42">
-              <caret line="67" column="77" lean-forward="true" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="77" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="temp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/temp.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -82,6 +69,16 @@
               <folding>
                 <marker date="1532716485027" expanded="false" signature="778:841" ph="import ..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="train_master_uncon.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master_uncon.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="31" column="40" lean-forward="true" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="40" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -113,8 +110,8 @@
       <file leaf-file-name="genHTKfile_rejuncon.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="50" column="16" lean-forward="true" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="16" />
+            <state relative-caret-position="1135">
+              <caret line="125" column="4" lean-forward="false" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="4" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -169,8 +166,8 @@
         <option value="$PROJECT_DIR$/TIMIT-tri/temp.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile_uncon.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile_unconrej.py" />
-        <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py" />
         <option value="$PROJECT_DIR$/TIMIT-tri/utils/TestData.py" />
+        <option value="$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py" />
       </list>
     </option>
   </component>
@@ -401,7 +398,14 @@
       <option name="project" value="LOCAL" />
       <updated>1532685600094</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fix bugs">
+      <created>1532796688898</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1532796688898</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -731,14 +735,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master_uncon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="27" column="21" lean-forward="true" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/test_phone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
@@ -762,7 +758,7 @@
         <state relative-caret-position="-42">
           <caret line="67" column="77" lean-forward="true" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="77" />
           <folding>
-            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -843,10 +839,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TIMIT-tri/train_master_uncon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="31" column="40" lean-forward="true" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TIMIT-tri/genHTKfile_rejuncon.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="50" column="16" lean-forward="true" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="16" />
+        <state relative-caret-position="1135">
+          <caret line="125" column="4" lean-forward="false" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="4" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
