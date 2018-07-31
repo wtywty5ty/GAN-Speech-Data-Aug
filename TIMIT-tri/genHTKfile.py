@@ -13,6 +13,8 @@ class genHTKfile(object):
     def __init__(self, phone, ID):
         #self.mode = 'prior'  # almost fixed file size
         self.mode = 'uniform_rej'
+        self.data = 'uniform'
+        #self.data = 'prior'
         # 'prior'
         self.sampPeriod = 100000
         self.sampSize = 2080

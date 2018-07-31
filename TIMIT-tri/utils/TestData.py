@@ -70,6 +70,23 @@ def genLabel(s, phonemap):
 
     return index, splitSize
 
+def pickstate(s, phonemap, fid):
+    idx = []
+    rows = s.stdout.read(4)
+    rows = struct.unpack('i', rows)[0]
+    columns = s.stdout.read(4)
+    columns = struct.unpack('i', columns)[0]
+    for row in range(rows):
+        results = s.stdout.read(columns * 4)
+        results = struct.unpack('%df' % columns, results)
+        tid_pool = [phonemap.f2t[i] for i in range(phonemap.nlabels())]
+        score_pool = [results[tid] for tid in tid_pool]
+        cls_fid = score_pool.index(max(score_pool))
+        if cls_fid == fid:
+            idx.append(row)
+            
+    return idx
+
 def genLabelFilter(s, phonemap):
     idx = {}
     splitSize = {}
@@ -87,7 +104,10 @@ def genLabelFilter(s, phonemap):
         cls_tid = results.index(max(results))
         if cls_tid not in tid_pool:
             continue
-        cls_fid = phonemap.t2f[cls_tid]
+        if max(results)<0.5:
+            continue
+        score_pool = [results[tid] for tid in tid_pool]
+        cls_fid = score_pool.index(max(score_pool))
         idx[cls_fid].append(row)
 
     index = []

@@ -51,8 +51,8 @@ class CDCGAN_Classifier(object):
         # solver
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=0.0002, betas=(0, 0.9))
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=0.0002, betas=(0, 0.9))
-        self.G_scheduler = optim.lr_scheduler.ExponentialLR(self.G_optimizer, gamma=0.99)
-        self.D_scheduler = optim.lr_scheduler.ExponentialLR(self.D_optimizer, gamma=0.99)
+        #self.G_scheduler = optim.lr_scheduler.ExponentialLR(self.G_optimizer, gamma=0.99)
+        #self.D_scheduler = optim.lr_scheduler.ExponentialLR(self.D_optimizer, gamma=0.99)
 
 
     def train(self):
@@ -133,8 +133,8 @@ class CDCGAN_Classifier(object):
 
 
 
-            self.D_scheduler.step()
-            self.G_scheduler.step()
+            #self.D_scheduler.step()
+            #self.G_scheduler.step()
             epoch_end_time = time.time()
             per_epoch_ptime = epoch_end_time - epoch_start_time
             print('[%d/%d] - ptime: %.2f' % ((epoch + 1), n_epochs, per_epoch_ptime))
@@ -154,7 +154,7 @@ class CDCGAN_Classifier(object):
 
             plt.close('all')
             # do checkpointing
-            if (epoch + 1) % 15 == 0:
+            if (epoch + 1) % 8 == 0:
                 torch.save(self.G, '%s/checkpoints/netG_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.D, '%s/checkpoints/netD_epoch_%d.pkl' % (opt.outf, epoch))
 
@@ -162,7 +162,7 @@ class CDCGAN_Classifier(object):
             epoch_G_avg = np.mean(epoch_G)
             print(str(epoch)+': '+str(epoch_D_avg))
             print(str(epoch)+': '+str(epoch_G_avg))
-            if epoch >= 20:
+            if epoch >= 15:
                 if np.abs(epoch_D_avg-_epoch_D_avg)<0.0001 and np.abs(epoch_G_avg-_epoch_G_avg)<0.0001:
                     break
 
@@ -190,12 +190,12 @@ if __name__ == '__main__':
     parser.add_argument('--n_epochs', type=int, default=100, help='number of epochs of training')
     parser.add_argument('--gpu_id', type=int, default=0, help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
-    parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
+    parser.add_argument('--n_dis', type=int, default=2, help='discriminator critic iters')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
-    parser.add_argument('--phone', default='aa', help='phone')
-    parser.add_argument('--outf', default='outf/test/aa', help="path to output files)")
+    parser.add_argument('--phone', default='s', help='phone')
+    parser.add_argument('--outf', default='outf/GAN_array_uncon/s', help="path to output files)")
     opt = parser.parse_args()
 
     print(opt)

@@ -10,7 +10,9 @@ import argparse
 import pickle
 import os,time
 import subprocess
-from utils import processTriData, triphoneMap
+from utils.ProcessRawData import *
+from utils.GenerateData import *
+from utils.TestData import *
 from models.models_sncgan_classifier_mlp import _netG, _netD, _netC
 plt.switch_backend('agg')
 
@@ -61,10 +63,10 @@ class CDCGAN_Classifier(object):
         # solver
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=0.0002, betas=(0, 0.9))
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=0.0002, betas=(0, 0.9))
-        self.C_optimizer = optim.Adam(self.C.parameters(), lr=0.0002, betas=(0, 0.9))
-        self.G_scheduler = optim.lr_scheduler.ExponentialLR(self.G_optimizer, gamma=0.99)
-        self.D_scheduler = optim.lr_scheduler.ExponentialLR(self.D_optimizer, gamma=0.99)
-        self.C_scheduler = optim.lr_scheduler.ExponentialLR(self.C_optimizer, gamma=0.99)
+        self.C_optimizer = optim.Adam(self.C.parameters(), lr=0.0001)
+        #self.G_scheduler = optim.lr_scheduler.ExponentialLR(self.G_optimizer, gamma=0.99)
+        #self.D_scheduler = optim.lr_scheduler.ExponentialLR(self.D_optimizer, gamma=0.99)
+        #self.C_scheduler = optim.lr_scheduler.ExponentialLR(self.C_optimizer, gamma=0.99)
 
     def train(self):
         train_hist = {}
@@ -82,6 +84,8 @@ class CDCGAN_Classifier(object):
         start_time = time.time()
         for epoch in range(n_epochs):
             epoch_start_time = time.time()
+            epoch_D = []
+            epoch_G = []
             last = False
             iter = 0
             while not last:
@@ -144,15 +148,17 @@ class CDCGAN_Classifier(object):
                         train_hist['D_losses'].append(errD.item())
                         train_hist['G_losses'].append(errG.item())
                         train_hist['C_losses'].append(errC.item())
+                        epoch_D.append(errD.item())
+                        epoch_G.append(errG.item())
 
                     if iter % 20 == 0:
                         print('[%d/%d][iter: %d] Loss_D: %.4f Loss_G: %.4f (%.4f/ %.4f) Loss_C: %.4f D(x): %.4f D(G(z)): %.4f '
                               % (epoch, n_epochs, iter, errD.item(), errG.item(),errG_D.item(), errG_C.item(), errC.item(), D_X, D_G))
 
 
-            self.D_scheduler.step()
-            self.G_scheduler.step()
-            self.C_scheduler.step()
+            #self.D_scheduler.step()
+            #self.G_scheduler.step()
+            #self.C_scheduler.step()
             epoch_end_time = time.time()
             per_epoch_ptime = epoch_end_time - epoch_start_time
             print('[%d/%d] - ptime: %.2f' % ((epoch + 1), n_epochs, per_epoch_ptime))
@@ -183,11 +189,23 @@ class CDCGAN_Classifier(object):
                 torch.save(self.D, '%s/checkpoints/netD_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.C, '%s/checkpoints/netC_epoch_%d.pkl' % (opt.outf, epoch))
 
+
+            epoch_D_avg = np.mean(epoch_D)
+            epoch_G_avg = np.mean(epoch_G)
+            print(str(epoch)+': '+str(epoch_D_avg))
+            print(str(epoch)+': '+str(epoch_G_avg))
+            if epoch >= 25:
+                if np.abs(epoch_D_avg-_epoch_D_avg)<0.001 and np.abs(epoch_G_avg-_epoch_G_avg)<0.001:
+                    break
+
+            _epoch_D_avg = np.mean(epoch_D)
+            _epoch_G_avg = np.mean(epoch_G)
+
         end_time = time.time()
         total_ptime = end_time - start_time
         train_hist['total_ptime'].append(total_ptime)
         print("Avg one epoch ptime: %.2f, total %d epochs ptime: %.2f" % (
-        torch.mean(torch.FloatTensor(train_hist['per_epoch_ptimes'])), n_epochs, total_ptime))
+        torch.mean(torch.FloatTensor(train_hist['per_epoch_ptimes'])), epoch, total_ptime))
         print("Training finish!... save training results")
         torch.save(self.G, '%s/netG_.pkl' % opt.outf)
         torch.save(self.D, '%s/netD_.pkl' % opt.outf)
@@ -203,18 +221,21 @@ if __name__ == '__main__':
     parser.add_argument('--n_epochs', type=int, default=50, help='number of epochs of training')
     parser.add_argument('--gpu_id', type=int, default=0, help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
-    parser.add_argument('--n_dis', type=int, default=1, help='discriminator critic iters')
+    parser.add_argument('--n_dis', type=int, default=2, help='discriminator critic iters')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
     parser.add_argument('--map_size', default=[16, 40], help='size of feature map')
-    parser.add_argument('--phone', default='dh', help='phone')
+    parser.add_argument('--phone', default='ng', help='phone')
     parser.add_argument('--outf', default='outf/test', help="path to output files)")
     opt = parser.parse_args()
 
     phoneMap = triphoneMap('slist.txt', opt.phone)
     opt.nclass = phoneMap.nlabels()
     print(opt)
+    DIR = '/home/ty/tw472/triphone/temp.tri_Z/dnntrain'
+    with open(DIR+'/finetune_gpu%d.cfg'%opt.gpu_id, 'a') as f:
+        f.write('HNTRAINSGD: TARGETPHONE = %s \n'%opt.phone)
 
     os.makedirs(opt.outf, exist_ok=True)
     os.makedirs('%s/checkpoints' % opt.outf, exist_ok=True)
