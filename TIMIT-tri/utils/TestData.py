@@ -14,7 +14,7 @@ def testResults(s):
         results_list.append(results)
     return rows, columns, results_list
 
-def dataFilter(s, id):
+def dataFilter(s, tid, thr):
     rows = s.stdout.read(4)
     rows = struct.unpack('i', rows)[0]
     columns = s.stdout.read(4)
@@ -23,8 +23,9 @@ def dataFilter(s, id):
     for i in range(rows):
         results = s.stdout.read(columns*4)
         results = struct.unpack('%df' % columns, results)
-        if results.index(max(results)) != id:
-            idx_list.append(i)
+        if results[tid] > thr:
+            continue
+        idx_list.append(i)
     return idx_list
 
 def dataFilterPlevel(s, id, phonemap):
@@ -70,8 +71,11 @@ def genLabel(s, phonemap):
 
     return index, splitSize
 
-def pickstate(s, phonemap, fid):
-    idx = []
+def pickstate(s, phonemap):
+    idx = {}
+    for fid in range(phonemap.nlabels()):
+        idx[fid] = []
+        
     rows = s.stdout.read(4)
     rows = struct.unpack('i', rows)[0]
     columns = s.stdout.read(4)
@@ -81,9 +85,42 @@ def pickstate(s, phonemap, fid):
         results = struct.unpack('%df' % columns, results)
         tid_pool = [phonemap.f2t[i] for i in range(phonemap.nlabels())]
         score_pool = [results[tid] for tid in tid_pool]
-        cls_fid = score_pool.index(max(score_pool))
-        if cls_fid == fid:
-            idx.append(row)
+        cls_score = max(score_pool)
+        cls_fid = score_pool.index(cls_score)
+        idx[cls_fid].append(row) 
+            
+    return idx
+
+def pickstaterej(s, phonemap):
+    idx = {}
+    for fid in range(phonemap.nlabels()):
+        idx[fid] = []
+
+    dbound = {}
+    with open ('test_ent_boundary.txt', 'r') as f:
+        for line in f.readlines():
+            if line.split(' ')[0] == 'state':
+                continue
+            tid = int(line.split(' ')[0])
+            down = float(line.strip('\n').split(' ')[1])
+            dbound[tid] = down
+
+    rows = s.stdout.read(4)
+    rows = struct.unpack('i', rows)[0]
+    columns = s.stdout.read(4)
+    columns = struct.unpack('i', columns)[0]
+    for row in range(rows):
+        results = s.stdout.read(columns * 4)
+        results = struct.unpack('%df' % columns, results)
+        tid_pool = [phonemap.f2t[i] for i in range(phonemap.nlabels())]
+        score_pool = [results[tid] for tid in tid_pool]
+        cls_score = max(score_pool)
+        if cls_score > 0.7 or cls_score < 0.3:
+            continue
+        cls_fid = score_pool.index(cls_score)
+        #if -np.sum(results*np.log(results)) < dbound[cls_fid]: #entropy
+        #   continue
+        idx[cls_fid].append(row) 
             
     return idx
 

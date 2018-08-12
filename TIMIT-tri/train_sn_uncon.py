@@ -34,10 +34,12 @@ class CDCGAN_Classifier(object):
         self.device = device
         # data
         # read data from TIMIT
+        #DIR = '/home/ty/tw472/triphone/temp.tri_Z/dnntrain'
+        #self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune_gpu%d.cfg -S %s/lib/flists/train.scp -l LABEL -I %s/train.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
+        #    DIR, DIR, DIR, opt.gpu_id, DIR, DIR, DIR, DIR, DIR)
         DIR = '/home/ty/tw472/triphone/temp.tri_Z/dnntrain'
-        self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune_gpu%d.cfg -S %s/lib/flists/train.scp -l LABEL -I %s/train.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
+        self.HTKcmd = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune_gpu%d.cfg -S %s/dnn.train.sp.scp -l LABEL -I %s/timit_all_sp.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist' % (
             DIR, DIR, DIR, opt.gpu_id, DIR, DIR, DIR, DIR, DIR)
-
         # nets
         self.G = generator(opt.nz).to(device)
         self.G.apply(weight_filler)
@@ -59,6 +61,8 @@ class CDCGAN_Classifier(object):
         train_hist = {}
         train_hist['D_losses'] = []
         train_hist['G_losses'] = []
+        train_hist['D_losses_ep'] = []
+        train_hist['G_losses_ep'] = []
         train_hist['per_epoch_ptimes'] = []
         train_hist['total_ptime'] = []
 
@@ -66,6 +70,7 @@ class CDCGAN_Classifier(object):
         device = self.device
         n_epochs = opt.n_epochs
         s = subprocess.Popen(self.HTKcmd, shell=True, stdout=subprocess.PIPE)
+        s.stdout.readline() #jump warning
         print('training start!')
         start_time = time.time()
         for epoch in range(n_epochs):
@@ -120,7 +125,7 @@ class CDCGAN_Classifier(object):
 
 
                         train_hist['D_losses'].append(errD.item())
-                        train_hist['G_losses'].append(errG.item())
+                        train_hist['G_losses'].append(errG.item())                    
                         epoch_D.append(errD.item())
                         epoch_G.append(errG.item())
 
@@ -154,16 +159,19 @@ class CDCGAN_Classifier(object):
 
             plt.close('all')
             # do checkpointing
-            if (epoch + 1) % 8 == 0:
+            if (epoch + 1) % 20 == 0:
                 torch.save(self.G, '%s/checkpoints/netG_epoch_%d.pkl' % (opt.outf, epoch))
                 torch.save(self.D, '%s/checkpoints/netD_epoch_%d.pkl' % (opt.outf, epoch))
 
             epoch_D_avg = np.mean(epoch_D)
             epoch_G_avg = np.mean(epoch_G)
+            train_hist['D_losses_ep'].append(epoch_D_avg)
+            train_hist['G_losses_ep'].append(epoch_G_avg)
+
             print(str(epoch)+': '+str(epoch_D_avg))
             print(str(epoch)+': '+str(epoch_G_avg))
-            if epoch >= 15:
-                if np.abs(epoch_D_avg-_epoch_D_avg)<0.0001 and np.abs(epoch_G_avg-_epoch_G_avg)<0.0001:
+            if epoch >= 10:
+                if np.abs(epoch_D_avg-_epoch_D_avg)<0.001 and np.abs(epoch_G_avg-_epoch_G_avg)<0.001:
                     break
 
             _epoch_D_avg = np.mean(epoch_D)

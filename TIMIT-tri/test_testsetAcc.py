@@ -16,7 +16,8 @@ print(opt)
 phonemap = triphoneMap('slist.txt', opt.phone)
 # read test data from TIMIT
 DIR = '/home/ty/tw472/triphone/temp.tri_Z/dnntrain'
-HTKcmd_test = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune_test.cfg -S %s/lib/flists/test.scp -l LABEL -I %s/timit_test.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist'%(DIR,DIR,DIR,DIR,DIR,DIR,DIR,DIR)
+HTKcmd_test = '%s/hmm0/HNTrainSGD -B -C %s/basic.cfg -C %s/finetune_test.cfg -S %s/lib/flists/test.scp -l LABEL -I %s/timit_test.mlf -H %s/hmm0/MMF -M %s/hmm0 %s/hmms.mlist'%(
+    DIR,DIR,DIR,DIR,DIR,DIR,DIR,DIR)
 test_s = subprocess.Popen(HTKcmd_test, shell=True, stdout=subprocess.PIPE)
 llabel = test_s.stdout.read(4)
 llabel = struct.unpack('i', llabel)[0]

@@ -1,9 +1,10 @@
 import torch
 import struct
 import subprocess
-import numpy
+import numpy as np
 import math
 import os, time
+import random
 from utils.ProcessRawData import *
 from utils.GenerateData import *
 from utils.TestData import *
@@ -12,7 +13,7 @@ from utils.TestData import *
 
 class genHTKfile(object):
     def __init__(self, phone, ID):
-        self.mode = 'uncon_prior' #reject correct samples
+        self.mode = 'uncon_prior_rejend' #reject correct samples
         #self.data = 'uniform'
         self.data = 'prior'
         self.ID = ID
@@ -51,33 +52,44 @@ class genHTKfile(object):
         HTKcmd = '%s/HNForward -C %s/basic.cfg -C %s/eval.cfg -H %s/hmm0/MMF %s/hmms.mlist' % (DIR, DIR, DIR, DIR, DIR)
         s = subprocess.Popen(HTKcmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         print('Start generating %s samples:'%self.phone)
-        body = 0
+        body = {}
+        size = {}
+        _size = {}
+        tsize = 0
         for fid in range(nclass):
-            size = 0
-            _size = 0
-            while _size != self.splitSize[fid]:
-                buf, data = generateDataUncon(self.generator, 8000)
-                s.stdin.write(buf)
-                s.stdin.flush()
-                index = pickstate(s, phoneMap, fid)
-                data = data[:, :13, :].detach()
+            body[fid] = 0
+            size[fid] = 0
+            _size[fid] = 0
+        while tsize != self.nSamples:
+            buf, data = generateDataUncon(self.generator, 8000)
+            data = data[:, :13, :].detach()
+            s.stdin.write(buf)
+            s.stdin.flush()
+            indexset = pickstaterej(s, phoneMap)    
+            for fid in range(nclass):
+                if _size[fid] == self.splitSize[fid]:
+                    print('%d: %d/%d'%(fid, self.splitSize[fid], _size[fid]))
+                    continue
+                index = indexset[fid]
                 data_f = data[index]
-                size += data_f.size(0)
-                if size > self.splitSize[fid]:
-                    rem = self.splitSize[fid] - _size
+                size[fid] += data_f.size(0)
+                if size[fid] > self.splitSize[fid]:
+                    rem = self.splitSize[fid] - _size[fid]
                     data_f = data_f[:rem]
-                    _size = _size + data_f.size(0)
+                    _size[fid] += data_f.size(0)
                 else:
-                    _size = size
-               # print('%d: %d'%(self.splitSize[fid], _size))
+                    _size[fid] = size[fid]
+                print('%d: %d/%d'%(fid, self.splitSize[fid], _size[fid]))
                 flat_data = data_f.cpu().view(-1).detach().numpy()
-                if body == 0:
-                    body = flat_data.astype('>f').tostring()
+                if body[fid] == 0:
+                    body[fid] = flat_data.astype('>f').tostring()
                 else:
-                    body = body + flat_data.astype('>f').tostring()
+                    body[fid] = body[fid] + flat_data.astype('>f').tostring()
+            tsize = np.sum([_size[fid] for fid in range(nclass)])
         
-        header = struct.pack('>iihh', self.nSamples, self.sampPeriod, self.sampSize, self.parmKind)
-        binary = header + body
+        binary = struct.pack('>iihh', self.nSamples, self.sampPeriod, self.sampSize, self.parmKind)
+        for fid in range(nclass):
+            binary = binary + body[fid]
         print('..finish!')
         end = struct.pack('i', 0)
         s.stdin.write(end)
@@ -136,7 +148,13 @@ if __name__ == '__main__':
     phone_list = phone_list1 + phone_list2 + phone_list3 + phone_list4
 
     ID = 0
+    manualSeed = 2018 + ID
+    random.seed(manualSeed)
+    torch.manual_seed(manualSeed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(manualSeed)
     start_time = time.time()
+
     for phone in phone_list:
         task = genHTKfile(phone, ID)
         task.genfbk()

@@ -221,7 +221,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_epochs', type=int, default=50, help='number of epochs of training')
     parser.add_argument('--gpu_id', type=int, default=0, help='gpu ids: e.g. 0,1,2, 0,2.')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
-    parser.add_argument('--n_dis', type=int, default=2, help='discriminator critic iters')
+    parser.add_argument('--n_dis', type=int, default=2, help='discriminator critic iter s')
     parser.add_argument('--nz', type=int, default=100, help='dimention of lantent noise')
     parser.add_argument('--nclass', type=int, default=10, help='number of classes')
     parser.add_argument('--batchsize', type=int, default=64, help='training batch size')
